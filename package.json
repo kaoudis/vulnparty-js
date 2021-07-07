@@ -1,0 +1,28 @@
+{
+    "name": "ssrfable-server",
+    "author": "Kelly Kaoudis",
+    "email": "hi@kellykaoud.is",
+    "contributors": [],
+    "version": "0.1.0",
+    "license": "GPLv3+",
+    "keywords": [
+        "security-testing",
+        "development",
+        "sandbox",
+        "ssrf"
+    ],
+    "description": "a cute little node server to throw ssrf payloads at",
+    "main": "server.js",
+    "private": "true",
+    "devDependencies": {},
+    "scripts": {
+        "start": "npm run dev"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "got": "^11.8.2",
+        "http": "^0.0.1-security",
+        "private-ip": "1.0.5",
+        "url": "^0.11.0"
+    }
+}
