@@ -6,11 +6,11 @@ const url = require('url');
 
 // do not pass user input unsanitized! this is only for demo purposes.
 async function getNext(nextLocation) {
-    await axios.get(nextLocation)
+    await axios({url: nextLocation})
         .then(response => console.log(response))
         .catch(err => {
             console.log('UH OH: request (to ' + nextLocation + ') failed: ');
-            console.log(err.message);
+            console.log(err);
         });
 }
 
@@ -18,7 +18,7 @@ const get = (privado, request, response) => {
     const queryParams = url.parse(request.url, true).query;
     const loc = queryParams.nextRequest;
     // requires at least the parameter 'nextRequest' set to an IP address or similar
-    console.log('attempting to request (raw): ' + loc);
+    console.log('attempting to request (raw address passed by client): ' + loc);
 
     const acceptable = privado ? privateIp(loc) : !privateIp(loc); 
     const headers = {'Content-Type': 'text/html'};
