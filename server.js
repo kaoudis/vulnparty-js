@@ -1,4 +1,4 @@
-const axios = require('axios');
+const axios = require('axios').create({proxy: false});
 const dns = require('dns');
 const express = require('express');
 // we are specifically using a vulnerable version of private-ip
@@ -12,10 +12,14 @@ async function getNext(nextLocation) {
         if (err) {
             console.log(err);
         } else {
-            axios({url: address})
-                .then(response => console.log(response))
+            const loc = !address.startsWith('http') ? 'http://' + address : address;
+            axios.get(loc)
+                .then(response => {
+                    console.log('Requested ' + loc);
+                    console.log(response);
+                })
                 .catch(err => {
-                    console.log('UH OH: request (to ' + nextLocation + ') failed: ');
+                    console.log('UH OH: request (to ' + loc + ') failed: ');
                     console.log(err);
             });
         }
