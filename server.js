@@ -1,17 +1,25 @@
 const axios = require('axios');
+const dns = require('dns');
 const express = require('express');
 // we are specifically using a vulnerable version of private-ip
 const privateIp = require('private-ip');
 const url = require('url');
 
 // do not pass user input unsanitized! this is only for demo purposes.
+// it's also kind of gross generally.
 async function getNext(nextLocation) {
-    await axios({url: nextLocation})
-        .then(response => console.log(response))
-        .catch(err => {
-            console.log('UH OH: request (to ' + nextLocation + ') failed: ');
+    await dns.lookup(nextLocation, {}, (err, address, family) => {
+        if (err) {
             console.log(err);
-        });
+        } else {
+            axios({url: address})
+                .then(response => console.log(response))
+                .catch(err => {
+                    console.log('UH OH: request (to ' + nextLocation + ') failed: ');
+                    console.log(err);
+            });
+        }
+    });
 }
 
 const get = (privado, request, response) => {
@@ -20,7 +28,7 @@ const get = (privado, request, response) => {
     // requires at least the parameter 'nextRequest' set to an IP address or similar
     console.log('attempting to request (raw address passed by client): ' + loc);
 
-    const acceptable = privado ? privateIp(loc) : !privateIp(loc); 
+    const acceptable = privado ? privateIp(loc) : !privateIp(loc);
     const headers = {'Content-Type': 'text/html'};
 
     if (acceptable) {
@@ -38,7 +46,7 @@ const app = express();
 const server = require('http').Server(app);
 const port = 8888;
 
-// no middleware for now I guess. 
+// no middleware for now I guess.
 // could require some headers here or add Helmet or such.
 app.use((request, response, next) => {
     next();
