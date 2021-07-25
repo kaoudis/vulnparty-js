@@ -66,12 +66,10 @@ app.get('/public', (request, response) => {
     get(false, request, response);
 });
 
-server.listen(port, (err) => {
+module.exports = server.listen(port, (err) => {
     if (err) {
         throw err;
     }
 
     console.log('started server on port ' + port + '...');
 });
-
-module.exports = server;
