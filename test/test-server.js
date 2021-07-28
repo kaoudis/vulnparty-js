@@ -13,8 +13,8 @@ chai.use(chaiHttp);
 describe('the server', () => {
 	const server = require('../server.js');
 
-	var axiosGet = sinon.stub(axios, "get").callsFake((loc) => {status: 200});
-	var lookup = sinon.stub(dns, "lookup").callsFake((hostname) => (null, '127.0.0.1:30995', 4));
+	const axiosGet = sinon.stub(axios, "get");
+	const lookup = sinon.stub(dns, "lookup");
 
 	afterEach(() => {
 		lookup.reset();
@@ -25,13 +25,16 @@ describe('the server', () => {
 		const url = (path) => 
 			`http://localhost:8888/${path}?nextRequest=http://127.0.0.1:30995`;
 
-		it('is not allowed by /private since the port fools private-ip', () => {
+		lookup.returns((null, '127.0.0.1:30995', 4));
+		axiosGet.returns({statusCode: 200, response: null});
+
+		it('is not allowed by /private since the port fools private-ip', () => {	
 			chai
 				.request(server)
 				.get(url('private'))
 				.end((response) => {
 					expect(response).to.have.status(403);
-					expect(response.body.startsWith('attempt to request'));
+					//expect(response.body.startsWith('attempt to request'));
 					done();
 				});
 		});
