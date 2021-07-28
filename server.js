@@ -4,23 +4,39 @@ const express = require('express');
 // we are specifically using a vulnerable version of private-ip
 const privateIp = require('private-ip');
 const url = require('url');
+const { createLogger, format, transports, winston } = require('winston');
+const { combine, timestamp, prettyPrint } = format;
+
+const logger = createLogger({
+	format: combine(
+		timestamp(),
+		prettyPrint()
+	),
+	transports: [
+		new transports.Console({ level: 'error' }),
+		new transports.File({
+			filename: 'server_info.log',
+			level: 'info'
+		})
+	]
+});
 
 // do not pass user input unsanitized! this is only for demo purposes.
 // it's also kind of gross generally.
 async function getNext(nextLocation) {
     await dns.lookup(nextLocation, {}, (err, address, family) => {
-        if (err) {
-            console.log(err);
+        if (err || address === null) {
+            logger.error(err);
         } else {
             const loc = !address.startsWith('http') ? 'http://' + address : address;
             axios.get(loc)
                 .then(response => {
-                    console.log('Requested ' + loc);
-                    console.log(response);
+                    logger.info('Requested ' + loc);
+                    logger.debug(response);
                 })
                 .catch(err => {
-                    console.log('UH OH: request (to ' + loc + ') failed: ');
-                    console.log(err);
+                    logger.error('UH OH: request (to ' + loc + ') failed: ');
+                    logger.error(err);
             });
         }
     });
@@ -28,21 +44,29 @@ async function getNext(nextLocation) {
 
 const get = (privado, request, response) => {
     const queryParams = url.parse(request.url, true).query;
+    // requires at least the parameter 'nextRequest' set to an IP or similar
     const loc = queryParams.nextRequest;
-    // requires at least the parameter 'nextRequest' set to an IP address or similar
-    console.log('attempting to request (raw address passed by client): ' + loc);
 
-    const acceptable = privado ? privateIp(loc) : !privateIp(loc);
-    const headers = {'Content-Type': 'text/html'};
+    logger.debug('attempting to request (raw address passed by client): ' + loc);
+    if (loc !== null && loc !== '') {	
+	// just dump the entire unsanitized user input into privateIp()! this is not ideally what would occur.
+	// private-ip after 1.0.5 will rightly only check IP addresses and not an ip with scheme and/or port, but 1.0.5 will do some fun stuff...
+    	const acceptable = privado ? privateIp(loc) : !privateIp(loc);
+    	const headers = {'Content-Type': 'text/html'};
 
-    if (acceptable) {
-        getNext(loc);
-        response.writeHead(200, headers);
-        response.end('attempted to hit ' + loc);
+    	if (acceptable) {
+        	getNext(loc);
+        	response.writeHead(200, headers);
+        	response.end(`attempt to request \'nextRequest\' location ${loc}!\n`);
+    	} else {
+        	logger.error(`would not request ${loc}\n`);
+        	response.writeHead(403, headers);
+        	logger.error(`problemas: will not request ${loc}\n`);
+    	}
     } else {
-        console.log('would not request ' + loc);
-        response.writeHead(403, headers);
-        response.end('problemas: will not request ' + loc);
+    	logger.error('parameter \'nextRequest\' not passed; returning 400');
+	response.writeHead(400, headers);
+	response.end('we require \'nextRequest\' parameter on request');    
     }
 }
 
@@ -57,19 +81,20 @@ app.use((request, response, next) => {
 });
 
 app.get('/private', (request, response) => {
-    console.log('GET /private');
+    logger.debug('GET /private');
     get(true, request, response);
 });
 
 app.get('/public', (request, response) => {
-    console.log('GET /public')
+    logger.debug('GET /public')
     get(false, request, response);
 });
 
 module.exports = server.listen(port, (err) => {
     if (err) {
+	logger.error(err);
         throw err;
     }
 
-    console.log('started server on port ' + port + '...');
+    logger.debug('started server on port ' + port + '...');
 });
