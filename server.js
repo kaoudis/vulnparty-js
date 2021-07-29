@@ -13,10 +13,10 @@ const logger = createLogger({
 		prettyPrint()
 	),
 	transports: [
-		new transports.Console({ level: 'error' }),
+		new transports.Console({ level: 'info' }),
 		new transports.File({
 			filename: 'server_info.log',
-			level: 'info'
+			level: 'debug'
 		})
 	]
 });
@@ -88,6 +88,12 @@ app.get('/private', (request, response) => {
 app.get('/public', (request, response) => {
     logger.debug('GET /public')
     get(false, request, response);
+});
+
+app.get('/next/:nextRequest', (request, response) => {
+    logger.info(`GET ${request.params.nextRequest}`);
+    logger.debug(`GET /next/${request.params.nextRequest}`);
+    getNext(request.params.nextRequest);   
 });
 
 module.exports = server.listen(port, (err) => {
