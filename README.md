@@ -23,6 +23,7 @@ If Axios cannot find the address/IP/whatever you're trying to forge a request to
 ```
 npm install && node server.js
 ```
+You can alternately use `npm run start` to run the server.
 
 ## Let's forge some requests?
 The only required query param (which is what we'll be SSRFing) is `nextRequest`.
@@ -31,7 +32,7 @@ The only required query param (which is what we'll be SSRFing) is `nextRequest`.
 ```
 node server.js
 ```
-you'll see some console output in the server tab which may be helpful.
+you'll see some console output in the server tab which may be helpful. There's also more verbose output in `server_log.json`.
 
 ## Example usage with clientside output
 ```
