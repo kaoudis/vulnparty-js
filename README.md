@@ -2,7 +2,7 @@
 A cute little node server to throw ssrf payloads at. Have an idea or want to see something else here? Make a pull request or open an issue please :)
 
 ## Warning
-This code is intentionally bad. Hopefully it goes without saying but please don't use it in production.
+This code is intentionally bad and mainly a sketch of a learning tool. Hopefully it goes without saying but please don't use it in production.
 
 ## What is SSRF?
 An attacker can achieve ssrf when they can make arbitrary requests of one form or another from the server to anywhere they like. The destination will see the request source as the server.
@@ -10,7 +10,8 @@ An attacker can achieve ssrf when they can make arbitrary requests of one form o
 This test server was initially built to demonstrate some specific SSRF scenarios.
 - private-ip failures
 - ssrf via path segment
-- [more coming soon]
+- ftp
+- [more coming soon - see code]
 
 Please play around and enjoy yourself - sometimes multiple variants of ssrf are possible on the same endpoint.
 
