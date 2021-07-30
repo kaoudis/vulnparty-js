@@ -26,9 +26,18 @@ If Axios cannot find the address/IP/whatever you're trying to forge a request to
 
 ## Install needed dependencies and start the server (first time use)
 ```
-npm install && node server.js
+DEBIAN / UBUNTU
+sudo apt-get install libcurl4-gnutls-dev && \
+npm install && \
+node server.js
+
+ARCH
+pacman -S libcurl-gnutls && \ 
+npm install && \
+node server.js
 ```
-You can alternately use `npm run start` to run the server.
+
+Alternately you can use `npm run start` to run the server.
 
 ## Let's forge some requests?
 The only required query param for most of the server endpoints (which is what we'll be SSRFing) is `nextRequest`. The ftp endpoint also needs a filename to retrieve.

@@ -28,6 +28,7 @@
         "express": "^4.17.1",
         "ftp": "^0.3.10",
         "http": "^0.0.1-security",
+        "node-libcurl": "^2.3.3",
         "private-ip": "1.0.5",
         "url": "^0.11.0",
         "winston": "^3.3.3"
