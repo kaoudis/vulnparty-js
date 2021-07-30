@@ -36,16 +36,15 @@ The only required query param for most of the server endpoints (which is what we
 ```
 node server.js
 ```
-you'll see some console output in the server tab which may be helpful. There's also more verbose output in `server_log.json`.
+You may see some console output in the server tab which may be helpful. There's also more verbose output in `server_log.json`.
 
-## Example usage with clientside output
+## Example usage with server running in another terminal tab or window
 ```
 $ curl "localhost:8888/public?nextRequest=127.0.0.1"
-problemas: will not request 127.0.0.1%
 ```
 
 ```
 $ curl "localhost:8888/private?nextRequest=127.0.0.1"
-attempted to hit 127.0.0.1%
 ```
 
+Logs for debugging will be appended to `server_log.json` in the server working directory.
