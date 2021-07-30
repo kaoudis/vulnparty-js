@@ -31,6 +31,7 @@
         "node-libcurl": "^2.3.3",
         "private-ip": "1.0.5",
         "url": "^0.11.0",
+        "vhost": "^3.0.2",
         "winston": "^3.3.3"
     },
     "scripts": {

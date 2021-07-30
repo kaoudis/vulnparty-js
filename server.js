@@ -1,4 +1,5 @@
 const axios = require('axios').create({proxy: false});
+const curl = require('node-libcurl');
 const dns = require('dns');
 const express = require('express');
 const ftp = require('ftp');
@@ -60,12 +61,13 @@ const get = (privado, request, response) => {
 
 		if (acceptable) {
 			getNext(loc);
+			logger.debug(`attempt to request \'nextRequest\' location ${loc}!\n`);
 			response.writeHead(200, headers);
 			response.end(`attempt to request \'nextRequest\' location ${loc}!\n`);
 		} else {
 			logger.error(`would not request ${loc}\n`);
 			response.writeHead(403, headers);
-			logger.error(`problemas: will not request ${loc}\n`);
+			response.end(`would not request ${loc}\n`);
 		}
 	} else {
 		logger.error('parameter \'nextRequest\' not passed; returning 400');
@@ -92,6 +94,15 @@ const ftpGet = (loc, fileName) => {
 	logger.debug(`connecting to ${loc} to retrieve ${fileName}`);
 	// connect as anonymous user
 	ftpClient.connect(loc);
+}
+
+const curlPost = (requestBody) => {
+
+
+}
+
+const patch = (request, response) => {
+
 }
 
 const app = express();
@@ -130,18 +141,33 @@ app.get('/ftp', (request, response) => {
 	const loc = queryParams.nextRequest;
 	const fileName = queryParams.file;	
 
-	// denylist sketch
+	// denylist sketch. the idea here is to show how a well-intentioned denylist may not end up 
+	// providing that much security since there are plenty of ways to get around this.
 	if (!fileName.includes('localhost') && !loc.includes('localhost') && !loc.includes('127.0.0.1')) {
 		logger.debug(`GET ${fileName} from ftp://${loc}`);
 		ftpGet(loc, fileName);
 		// just empty 200 response for now
 		response.writeHead(200, headers);
+		response.end();
 	} else {
 		logger.error(`will not retrieve ${fileName} from ftp://${loc}`);
 		response.writeHead(400, headers);
-		response.end('we require \'nextRequest\' parameter on request');    
+		response.end('did you include the `file` and `nextRequest` parameters?');    
 	}
 });
+
+// curl allows some more exotic schemas which may be interesting to try out
+app.post('/curl', (request, response) => {
+    logger.debug('POST /curl');
+    curlPost(request.body, response);
+});
+
+// this time, use the Host header
+app.patch('/host', (request, response) => {
+    logger.debug('PATCH /host');
+    patch(request, response);
+});
+
 
 module.exports = server.listen(port, (err) => {
 	if (err) {
