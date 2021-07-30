@@ -2,7 +2,7 @@
 A cute little node server to throw ssrf payloads at. Have an idea or want to see something else here? Make a pull request or open an issue please :)
 
 ## Warning
-This code is intentionally bad and mainly a sketch of a learning tool. Hopefully it goes without saying but please don't use it in production.
+This code is intentionally bad and mainly a sketch of a learning tool. Hopefully it goes without saying but please don't use it in production; the normal [GPLv3+](https://www.gnu.org/licenses/gpl-3.0.en.html) warnings apply here.
 
 ## What is SSRF?
 An attacker can achieve ssrf when they can make arbitrary requests of one form or another from the server to anywhere they like. The destination will see the request source as the server.
