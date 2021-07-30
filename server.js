@@ -129,8 +129,18 @@ app.get('/ftp', (request, response) => {
 	const queryParams = url.parse(request.url, true).query;
 	const loc = queryParams.nextRequest;
 	const fileName = queryParams.file;	
-	logger.debug(`GET ${fileName} from ftp://${loc}`);
-	ftpGet(loc, fileName);
+
+	// denylist sketch
+	if (!fileName.includes('localhost') && !loc.includes('localhost') && !loc.includes('127.0.0.1')) {
+		logger.debug(`GET ${fileName} from ftp://${loc}`);
+		ftpGet(loc, fileName);
+		// just empty 200 response for now
+		response.writeHead(200, headers);
+	} else {
+		logger.error(`will not retrieve ${fileName} from ftp://${loc}`);
+		response.writeHead(400, headers);
+		response.end('we require \'nextRequest\' parameter on request');    
+	}
 });
 
 module.exports = server.listen(port, (err) => {
