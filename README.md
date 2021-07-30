@@ -1,7 +1,8 @@
 # ssrfable-server
 A cute little node server to throw ssrf payloads at. Have an idea or want to see something else here? Make a pull request or open an issue please :)
 
-# FAQs
+## Warning
+This code is intentionally bad. Hopefully it goes without saying but please don't use it in production.
 
 ## What is SSRF?
 An attacker can achieve ssrf when they can make arbitrary requests of one form or another from the server to anywhere they like. The destination will see the request source as the server.
@@ -29,7 +30,7 @@ npm install && node server.js
 You can alternately use `npm run start` to run the server.
 
 ## Let's forge some requests?
-The only required query param (which is what we'll be SSRFing) is `nextRequest`.
+The only required query param for most of the server endpoints (which is what we'll be SSRFing) is `nextRequest`. The ftp endpoint also needs a filename to retrieve.
 
 ## Start the server (dependencies up to date)
 ```
