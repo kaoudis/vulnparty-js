@@ -10,6 +10,8 @@ const url = require('url');
 const { createLogger, format, transports, winston } = require('winston');
 const { combine, timestamp, prettyPrint } = format;
 
+const headers = {'Content-Type': 'text/html'};
+
 const logger = createLogger({
 	format: combine(
 		timestamp(),
@@ -57,7 +59,6 @@ const get = (privado, request, response) => {
 		// IP addresses and not an ip with scheme and/or port, but 1.0.5 will do 
 		// some fun stuff...
 		const acceptable = privado ? privateIp(loc) : !privateIp(loc);
-		const headers = {'Content-Type': 'text/html'};
 
 		if (acceptable) {
 			getNext(loc);
