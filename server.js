@@ -138,8 +138,31 @@ const curlPost = (requestBody) => {
 
 }
 
-const patch = (request, response) => {
+async function requestHost(hostHeader, response) {
+	await dns.lookup(hostHeader, {}, (err, address, _) => {
+		if (err || address === null) {
+			logger.error(err);
+		} else if (privateIp(address)) {
+			const loc = !address.startsWith('http') ? 'http://' + address : address;
+			axios.get(loc)
+				.then(response => {
+					logger.info('Requested ' + loc);
+					logger.debug(response);
+				})
+				.catch(err => {
+					logger.error('UH OH: request (to ' + loc + ') failed: ');
+					logger.error(err);
+				});
+		} else {
+			let msg = 'requested host did not resolve to private ip';
+			response.writeHead(400, headers);
+			response.end(msg);
+		}
+	});
+}
 
+const patch = (request, response) => {
+	requestHost(request.headers.host, response);
 }
 
 const app = express();
