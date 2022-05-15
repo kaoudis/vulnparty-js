@@ -29,6 +29,8 @@ If Axios cannot find the address/IP/whatever you're trying to forge a request to
 # How to run
 
 ## Install needed dependencies and start the server (first time use)
+If you have dependency-related issues or issues running the server in order to try payloads against it, please file an issue in this repository.
+
 ```
 DEBIAN / UBUNTU
 sudo apt-get install libcurl4-gnutls-dev && \
