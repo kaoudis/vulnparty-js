@@ -35,26 +35,30 @@ If you have dependency-related issues or issues running the server in order to t
 DEBIAN / UBUNTU
 sudo apt-get install libcurl4-gnutls-dev && \
 npm install && \
-node server.js
+npm run start
 
 ARCH
-pacman -S libcurl-gnutls && \ 
+pacman -S libcurl-gnutls && \
 npm install && \
-node server.js
+npm run start
 ```
 
-Alternately you can use `npm run start` to run the server.
+Alternately you can use `node server.js` to run the server.
 
 ## Let's forge some requests?
 The only required query param for most of the server endpoints (which is what we'll be SSRFing) is `nextRequest`. The ftp endpoint also needs a filename to retrieve.
+
+You'll want to watch both the server output log and the clientside output to get a sense of what's happening.
 
 ## Start the server (dependencies up to date)
 ```
 node server.js
 ```
-You may see some console output in the server tab which may be helpful. There's also more verbose output in `server_log.json`.
+You'll see some console output in the server tab which may be helpful. There's also more verbose output in `server_log.json`.
 
-## Example usage with server running in another terminal tab or window
+## Example usage for a few of the endpoints
+(with server running in another terminal tab or window)
+
 ```
 $ curl "localhost:8888/public?nextRequest=127.0.0.1"
 ```

@@ -4,7 +4,7 @@ const dns = require("dns");
 const express = require("express");
 const fs = require("fs");
 const ftp = require("ftp");
-// we are specifically using a vulnerable version of private-ip
+// vulnerable version of private-ip (see package-lock)
 const privateIp = require("private-ip");
 const url = require("url");
 
@@ -26,12 +26,12 @@ const logger = createLogger({
 });
 
 // do not pass user input unsanitized! this is only for demo purposes.
-// it's also kind of gross generally.
 async function getNext(nextLocation) {
   await dns.lookup(nextLocation, {}, (err, address, family) => {
-    if (err || address === null) {
+    if (err || address === null || family === null) {
       logger.error(err);
     } else {
+      // don't do this
       const loc = !address.startsWith("http") ? "http://" + address : address;
       axios
         .get(loc)
@@ -41,13 +41,14 @@ async function getNext(nextLocation) {
         })
         .catch((err) => {
           logger.error("UH OH: request (to " + loc + ") failed: ");
-          logger.error(err);
+          logger.error(err.errno);
+          logger.error(err.config);
         });
     }
   });
 }
 
-const get = (privado, request, response) => {
+const get = (privad o, request, response) => {
   const queryParams = url.parse(request.url, true).query;
   // requires at least the parameter 'nextRequest' set to an IP or similar
   const loc = queryParams.nextRequest;
@@ -55,16 +56,17 @@ const get = (privado, request, response) => {
 
   if (loc !== null && loc !== "") {
     // just dump the entire unsanitized user input into privateIp()! this is not
-    // ideally what would occur. private-ip after 1.0.5 will rightly only check
-    // IP addresses and not an ip with scheme and/or port, but 1.0.5 will do
+    // ideally what would occur. private-ip after v1.0.5 will rightly only check
+    // IP addresses and not an ip with scheme and/or port, but v1.0.5 will do
     // some fun stuff...
     const acceptable = privado ? privateIp(loc) : !privateIp(loc);
 
     if (acceptable) {
+      const msg = `attempting to request (private=${privado}) \'nextRequest\' location ${loc}\n`;
+      logger.debug(msg);
       getNext(loc);
-      logger.debug(`attempt to request \'nextRequest\' location ${loc}!\n`);
       response.writeHead(200, headers);
-      response.end(`attempt to request \'nextRequest\' location ${loc}!\n`);
+      response.end(msg);
     } else {
       logger.error(`would not request ${loc}\n`);
       response.writeHead(403, headers);
@@ -80,7 +82,8 @@ const get = (privado, request, response) => {
 const getBookByName = (bookName, response) => {
   if (bookName.endsWith(".pdf")) {
     // check for the file locally on the server
-    fs.readFile(bookName, (err, bookData) => {
+    const path = `library/books/${bookName}`;
+    fs.readFile(path, (err, bookData) => {
       if (err) {
         logger.error(err);
         response.writeHead(500, headers);
@@ -147,8 +150,9 @@ async function requestHost(hostHeader, response) {
           logger.debug(response);
         })
         .catch((err) => {
-          logger.error("UH OH: request (to " + loc + ") failed: ");
-          logger.error(err);
+          logger.error("UH OH: request (to " + loc + ") failed");
+          logger.error(err.errno);
+          logger.error(err.config);
         });
     } else {
       let msg = "requested host did not resolve to private ip";
@@ -192,7 +196,7 @@ app.get("/next/:nextRequest", (request, response) => {
   getNext(request.params.nextRequest);
 });
 
-//retrieve a file! which could be a pdf!
+// retrieve a file! which could be a pdf!
 app.get("/library/books/:bookFileName", (request, response) => {
   logger.debug(`GET ${request.params.bookFileName}`);
   getBookByName(request.params.bookFileName, response);
@@ -204,8 +208,9 @@ app.get("/ftp", (request, response) => {
   const loc = queryParams.nextRequest;
   const fileName = queryParams.file;
 
-  // denylist sketch. the idea here is to show how a well-intentioned denylist may not end up
-  // providing that much security since there are plenty of ways to get around this.
+  // Denylist sketch. the idea here is to show how a well-intentioned denylist
+  // may not end up providing that much security since there are plenty of ways
+  // to get around this.
   if (
     !fileName.includes("localhost") &&
     !loc.includes("localhost") &&
