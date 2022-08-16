@@ -1,7 +1,6 @@
 const axios = require("axios").create({ proxy: false });
 const curl = require("node-libcurl");
 const express = require("express");
-const fs = require("fs");
 const ftp = require("ftp");
 // vulnerable version of private-ip (see package-lock)
 const privateIp = require("private-ip");
@@ -12,6 +11,7 @@ const { response } = require("express");
 const { combine, timestamp, prettyPrint } = format;
 
 const { getNext, patch } = require("./dns_lookups");
+const getBookByName = require("./books");
 
 const headers = { "Content-Type": "text/html" };
 
@@ -54,34 +54,6 @@ const get = (privado, request, response) => {
     logger.error("parameter 'nextRequest' not passed; returning 400");
     response.writeHead(400, headers);
     response.end("we require 'nextRequest' parameter on request");
-  }
-};
-
-const getBookByName = (bookName, response) => {
-  if (bookName.endsWith(".pdf")) {
-    // check for the file locally on the server
-    const path = `library/books/${bookName}`;
-    fs.readFile(path, (err, bookData) => {
-      if (err) {
-        logger.error(err);
-        response.writeHead(500, headers);
-        // never do this - there's no reason to pass back
-        // any kind of internal server error info to the client.
-        // not even useful information unless the client is a hacker.
-        response.end(`internal server error: ${err}`);
-      } else {
-        // never do this either - we have no idea what this file is
-        // we're just dumping it out bang to the client
-        response.writeHead(200, headers);
-        response.end(bookData);
-      }
-    });
-  } else {
-    let msg = `unacceptable file extension requested (as part of bookFileName '${bookName}')`;
-
-    logger.error(msg);
-    response.writeHead(400, headers);
-    response.end(msg);
   }
 };
 
