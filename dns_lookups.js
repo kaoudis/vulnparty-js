@@ -1,4 +1,8 @@
+const axios = require("axios").create({ proxy: false });
 const dns = require("dns");
+const { response } = require("express");
+
+const logger = require("./logger");
 
 // do not pass user input unsanitized! this is only for demo purposes.
 const getNext = (nextLocation) => {
@@ -52,7 +56,5 @@ const patch = (request, response) => {
   requestHost(request.headers.host, response);
 };
 
-module.exports = {
-  getNext,
-  patch,
-};
+module.exports.getNext = getNext;
+module.exports.patch = patch;

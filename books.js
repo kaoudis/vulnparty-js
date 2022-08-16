@@ -1,4 +1,8 @@
 const fs = require("fs");
+const { response } = require("express");
+
+const logger = require("./logger");
+
 
 const getBookByName = (bookName, response) => {
     if (bookName.endsWith(".pdf")) {
