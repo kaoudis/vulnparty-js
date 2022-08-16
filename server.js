@@ -1,4 +1,3 @@
-const curl = require("node-libcurl");
 const express = require("express");
 
 const { response } = require("express");
@@ -8,8 +7,6 @@ const { get, headers } = require("./get");
 const { getNext, patch } = require("./dns_lookups");
 const getBookByName = require("./books");
 const logger = require("./logger");
-
-const curlPost = (requestBody) => {};
 
 const app = express();
 const server = require("http").Server(app);
