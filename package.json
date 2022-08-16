@@ -1,5 +1,5 @@
 {
-    "name": "ssrfable-server",
+    "name": "vulnparty-server",
     "author": "Kelly Kaoudis",
     "email": "hi@kellykaoud.is",
     "contributors": [],
@@ -11,7 +11,7 @@
         "sandbox",
         "ssrf"
     ],
-    "description": "a cute (and bad) little node server to throw ssrf payloads at",
+    "description": "a cute (intentionally bad) server to throw ssrf payloads at",
     "main": "server.js",
     "private": "true",
     "dependencies": {
