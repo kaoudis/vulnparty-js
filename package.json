@@ -17,9 +17,11 @@
   "dependencies": {
     "assert": "^2.0.0",
     "axios": "^0.21.1",
+    "cors-anywhere": "^0.4.4",
     "dns": "^0.1.2",
     "express": "^4.17.1",
     "ftp": "^0.3.10",
+    "http-proxy": "^1.18.1",
     "netmask": "1.0.6",
     "node-libcurl": "^2.3.3",
     "private-ip": "1.0.5",

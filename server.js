@@ -82,11 +82,6 @@ app.get("/ftp", (request, response) => {
   }
 });
 
-app.post("/curl", (request, response) => {
-  logger.debug("POST /curl");
-  curlPost(request.body, response);
-});
-
 app.patch("/host", (request, response) => {
   logger.debug("PATCH /host");
   patch(request, response);

@@ -7,17 +7,21 @@ As you might notice, the main foci here are SSRF, RFI, LFI, and open redirects, 
 ## The Endpoints
 
 ### GET /private
-This endpoint relies on a vulnerable version of the `private-ip` JS package.
+This endpoint relies on a vulnerable version of the `private-ip` JS package. It also does some entirely inappropriate things when returning error responses.
 
 #### What is private-ip?
 `private-ip`'s interface is designed to the question of whether an IP address is private or public, but the implementation was flawed.
 
-#### Related CVEs
+#### Related/Inspirational CVEs
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-28360
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-23718
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-15895
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-14858
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-22970
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-35949
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32457
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-30049
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-29188
 
 #### Other
 - [DEF CON 29 talk about IP parsing confusion referencing private-ip and others](https://www.youtube.com/watch?v=_o1RPJAe4kU)
@@ -45,6 +49,25 @@ This endpoint (and `GET /safe_public`) are intended to demonstrate what might ha
 (See `GET /safe_private`).
 
 ### GET /next/:nextRequest
+This endpoint doesn't literally use `cors-anywhere`, but rather artistically reimplements the issue for comparison purposes.
+
+To explore literal usage of `cors-anywhere`, try the `GET /cors-anywhere` endpoint.
+
+Quoting the description of `cors-anywhere`, 
+
+    CORS Anywhere is a NodeJS proxy which adds CORS headers to the proxied request.
+
+    The url to proxy is literally taken from the path, validated and proxied. The protocol part of the proxied URI is optional, and defaults to "http". If port 443 is specified, the protocol defaults to "https".
+
+    This package does not put any restrictions on the http methods or headers, except for cookies.
+
+Check out the request examples in the `cors-anywhere` README for more.
+
+#### References 
+- https://github.com/Rob--W/cors-anywhere
+
+### GET /cors-anywhere
+TBD
 
 ### GET /library/books/:bookFileName
 
@@ -56,13 +79,12 @@ TBD
 ### PATCH /host
 The `Host`, `Location`, `X-Forwarded`, or `X-Forwarded-For` headers can potentially be vulnerable to SSRF since these headers are frequently in use for application-layer routing purposes. Sometimes SSRF is possible through other headers, but I find that large hosting providers may consider an "open reverse proxy" like this a feature rather than a bug. 
 
-#### CVEs this endpoint is inspired by
-- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-23776
-- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-1925
-- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-10973
 
 #### Further References
 - https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service/
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-23776
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-1925
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-10973
 
 ### GET /redirect/:nextRequest
 TBD
