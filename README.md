@@ -1,11 +1,19 @@
 # ssrfable-server
-Have an idea or want to see something else here? Make a pull request or open an issue please :)
 
 ## Warning
 Hopefully it goes without saying but please don't use this code in production or for anything
 serious; the normal [GPLv3+](https://www.gnu.org/licenses/gpl-3.0.en.html) warnings apply here.
 
-## Note
+## How to Contribute
+Have an idea or want to see something else here? Make a pull request or open an issue please :)
+
+0. Identify the CVE(s), CWE(s), or other vulnerable things you'd like to reproduce in Node here
+1. Code up your commits, preferably including tests to prove your addition works (fails) as intended
+2. Document what you did and how the endpoint or functionality added is meant to be vulnerable, with references, in [the correct place](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md).
+3. (optional) Add your name or handle to CREDITS.md
+4. Open your PR
+
+### Note
 PRs to fix the app vulns or upgrade from vulnerable dependency versions will be rejected
 
 ## Overview
@@ -27,6 +35,8 @@ You can:
 - practice your JS coding standards; I'd like this app to follow https://google.github.io/styleguide/jsguide.html eventually
 - just spin the app up and use it as a test ground for any payloads you like
 
+See [vuln documentation here](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md).
+
 ### Why did you build this?
 Even though apps like DVWA and Juice Shop are awesome, someone else already implemented them.
 
@@ -41,11 +51,6 @@ This project started when I wanted to really understand why SSRF can happen beyo
 
 This test server was initially built to demonstrate some specific SSRF scenarios... 
 and then it mutated and grew! Please play around and enjoy yourself!
-
-## What is private-ip?
-Private-ip is a little guardian package to tell you if an IP address should be internal-only or is part of the external internet, generally speaking. In [November of 2020](https://github.com/frenchbread/private-ip/pull/2) Sick Codes and Nick Sahler hardened private-ip's IPv4 check after John Jackson and Harold Hunt confirmed a flaw in it via the Shutterstock bug bounty program (see also: [advisory](https://github.com/sickcodes/security/blob/master/advisories/SICK-2020-022.md)).
-
-See also: [DEF CON 29 talk about IP parsing confusion referencing private-ip and others](https://www.youtube.com/watch?v=_o1RPJAe4kU)
 
 ## Why is Axios trying to connect to 127.0.0.1:80?
 If Axios cannot find the address/IP/whatever you're trying to forge a request to, it'll

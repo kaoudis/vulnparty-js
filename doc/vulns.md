@@ -7,7 +7,10 @@ As you might notice, the main foci here are SSRF, RFI, LFI, and open redirects, 
 ## The Endpoints
 
 ### GET /private
-This endpoint relies on a vulnerable version of the `private-ip` JS package. `private-ip`'s interface is designed to the question of whether an IP address is private or public, but the implementation was flawed.
+This endpoint relies on a vulnerable version of the `private-ip` JS package.
+
+#### What is private-ip?
+`private-ip`'s interface is designed to the question of whether an IP address is private or public, but the implementation was flawed.
 
 #### Related CVEs
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-28360
@@ -15,6 +18,11 @@ This endpoint relies on a vulnerable version of the `private-ip` JS package. `pr
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-15895
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-14858
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-22970
+
+#### Other
+- [DEF CON 29 talk about IP parsing confusion referencing private-ip and others](https://www.youtube.com/watch?v=_o1RPJAe4kU)
+- [advisory](https://github.com/sickcodes/security/blob/master/advisories/SICK-2020-022.md)
+- [private-ip fix PR](https://github.com/frenchbread/private-ip/pull/2): Sick Codes and Nick Sahler hardened private-ip's IPv4 check after John Jackson and Harold Hunt confirmed a flaw in the package via the Shutterstock bug bounty program.
 
 ### GET /public
 This endpoint is the inverse of `/private`. It allows you to make the `nextRequest` only if the private-ip based filter judges the provided IP address is not part of a private range.
