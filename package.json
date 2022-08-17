@@ -1,33 +1,51 @@
 {
-    "name": "vulnparty-server",
-    "author": "Kelly Kaoudis",
-    "email": "hi@kellykaoud.is",
-    "contributors": [],
-    "version": "0.1.0",
-    "license": "GPLv3+",
-    "keywords": [
-        "security-testing",
-        "development",
-        "sandbox",
-        "ssrf"
-    ],
-    "description": "a cute (intentionally bad) server to throw ssrf payloads at",
-    "main": "server.js",
-    "private": "true",
-    "dependencies": {
-        "assert": "^2.0.0",
-        "axios": "^0.21.1",
-        "dns": "^0.1.2",
-        "express": "^4.17.1",
-        "ftp": "^0.3.10",
-        "netmask": "1.0.6",
-        "node-libcurl": "^2.3.3",
-        "private-ip": "1.0.5",
-        "url": "^0.11.0",
-        "winston": "^3.3.3"
-    },
-    "scripts": {
-        "install test": "npm install --only=dev",
-        "test": "mocha test/*.js"
-    }
+  "name": "vulnparty-server",
+  "author": "Kelly Kaoudis",
+  "email": "hi@kellykaoud.is",
+  "contributors": [],
+  "version": "0.1.0",
+  "license": "GPL-3.0",
+  "keywords": [
+    "greybox-testing",
+    "development",
+    "sandbox",
+    "vulnerable"
+  ],
+  "description": "a cute (intentionally terrible, awful, no-good) JS web server",
+  "main": "server.js",
+  "private": "true",
+  "dependencies": {
+    "assert": "^2.0.0",
+    "axios": "^0.21.1",
+    "dns": "^0.1.2",
+    "express": "^4.17.1",
+    "ftp": "^0.3.10",
+    "netmask": "1.0.6",
+    "node-libcurl": "^2.3.3",
+    "private-ip": "1.0.5",
+    "url": "^0.11.0",
+    "winston": "^3.3.3"
+  },
+  "scripts": {
+    "install test": "npm install --only=dev",
+    "test": "mocha test/*.js",
+    "start": "node server.js"
+  },
+  "devDependencies": {
+    "eslint": "^8.22.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kaoudis/vulnparty-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kaoudis/vulnparty-js/issues"
+  },
+  "homepage": "https://github.com/kaoudis/vulnparty-js#readme"
 }

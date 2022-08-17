@@ -45,12 +45,13 @@ const safe_get = (private, request, response) => {
 };
 
 // uses the private ranges defined in the 1996 RFC 1918, 
-// https://datatracker.ietf.org/doc/html/rfc1918
+// https://datatracker.ietf.org/doc/html/rfc1918, and netmask 1.0.6
 const privateBlock1 = new netmask.Netmask("10.0.0.0/8");
 const privateBlock2 = new netmask.Netmask("172.16.0.0/12");
 const privateBlock3 = new netmask.Netmask("192.168.0.0/16");
+
 const isPrivate = (ip) => {
-    // note that this approach is incomplete as it doesn't take into account ipv6
+    // note that this approach is incomplete *and* it doesn't take into account ipv6
     if (privateBlock1.contains(ip) || privateBlock2.contains(ip) || privateBlock3.contains(ip)) {
         return true;
     }

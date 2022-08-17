@@ -82,13 +82,11 @@ app.get("/ftp", (request, response) => {
   }
 });
 
-// curl allows some more exotic schemas which may be interesting to try out
 app.post("/curl", (request, response) => {
   logger.debug("POST /curl");
   curlPost(request.body, response);
 });
 
-// this time, use the Host header
 app.patch("/host", (request, response) => {
   logger.debug("PATCH /host");
   patch(request, response);
