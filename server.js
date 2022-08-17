@@ -1,11 +1,11 @@
 const express = require("express");
-
 const { response } = require("express");
 
 const ftpGet = require("./ftp");
 const { get, headers } = require("./get");
 const { getNext, patch } = require("./dns_lookups");
 const getBookByName = require("./books");
+const safeGet = require("./safe_get");
 const logger = require("./logger");
 
 const app = express();
@@ -32,15 +32,30 @@ app.get("/public", (request, response) => {
   get(false, request, response);
 });
 
-// inspired by cors-anywhere
-app.get("/next/:nextRequest", (request, response) => {
-  logger.debug(`GET ${request.params.nextRequest}`);
+// if the potential nextRequest location is "private" according to 
+// netmask 1.0.6, request it
+app.get("/safe_private", (request, response) => {
+  logger.debug("GET /safe_private");
+  safeGet(true, request, response);
+});
+
+// if the potential nextRequest location is "public" according to 
+// netmask 1.0.6, request it
+app.get("/safe_public", (request, response) => {
+  logger.debug("GET /safe_public");
+  safeGet(false, request, response);
+});
+
+// inspired by the JS cors-anywhere package, which is innately
+// and by design vulnerable
+app.get("/next/:nextRequest", (request, _) => {
+  logger.debug(`GET /next/${request.params.nextRequest}`);
   getNext(request.params.nextRequest);
 });
 
 // retrieve a file! which could be a pdf!
 app.get("/library/books/:bookFileName", (request, response) => {
-  logger.debug(`GET ${request.params.bookFileName}`);
+  logger.debug(`GET /library/books/${request.params.bookFileName}`);
   getBookByName(request.params.bookFileName, response);
 });
 
