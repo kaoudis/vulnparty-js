@@ -46,8 +46,7 @@ app.get("/safe_public", (request, response) => {
   safeGet(false, request, response);
 });
 
-// inspired by the JS cors-anywhere package, which is innately
-// and by design vulnerable
+// performs a DNS lookup to figure out whether or not to request a thing
 app.get("/next/:nextRequest", (request, _) => {
   logger.debug(`GET /next/${request.params.nextRequest}`);
   getNext(request.params.nextRequest);

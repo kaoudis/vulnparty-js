@@ -12,7 +12,7 @@ This endpoint relies on a vulnerable version of the `private-ip` JS package. It 
 #### What is private-ip?
 `private-ip`'s interface is designed to the question of whether an IP address is private or public, but the implementation was flawed.
 
-#### Related/Inspirational CVEs
+#### Inspirational References
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-28360
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-23718
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-15895
@@ -22,54 +22,65 @@ This endpoint relies on a vulnerable version of the `private-ip` JS package. It 
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32457
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-30049
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-29188
-
-#### Other
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32409
 - [DEF CON 29 talk about IP parsing confusion referencing private-ip and others](https://www.youtube.com/watch?v=_o1RPJAe4kU)
-- [advisory](https://github.com/sickcodes/security/blob/master/advisories/SICK-2020-022.md)
-- [private-ip fix PR](https://github.com/frenchbread/private-ip/pull/2): Sick Codes and Nick Sahler hardened private-ip's IPv4 check after John Jackson and Harold Hunt confirmed a flaw in the package via the Shutterstock bug bounty program.
+- https://sick.codes [advisory](https://github.com/sickcodes/security/blob/master/advisories/SICK-2020-022.md)
+- [private-ip fix PR](https://github.com/frenchbread/private-ip/pull/2) (Sick Codes, Nick Sahler)
 
 ### GET /public
 This endpoint is the inverse of `/private`. It allows you to make the `nextRequest` only if the private-ip based filter judges the provided IP address is not part of a private range.
 
-#### Related CVEs
-(See `GET /private`).
+#### References
+(See [GET /private](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md#get-private)).
 
 ### GET /safe_private
-This endpoint (and `GET /safe_public`) are intended to demonstrate what might happen if a developer who's a service owner got some kind of security report - maybe a CVE, maybe a ticket from some kind of internal system or internal security team - without additional security guidance. Or, perhaps the team were resistant to making business logic changes as part of fixing the vulnerable endpoint. Our imaginary team, instead of bumping the vulnerable dependency, chose to switch to a different library for the same purpose and roll their own IP address range filtering. This new endpoint is very safe.
+This endpoint (and `GET /safe_public`) are intended to demonstrate what might happen if a feature team were provided some kind of security report - maybe a CVE, maybe a ticket from some kind of internal system or internal security team - about their HTTP API without any useful security guidance. Or, perhaps the team were resistant to making business logic changes as part of fixing the vulnerable endpoint. Our imaginary team, instead of bumping the vulnerable dependency, chooses to switch to a different library for the same purpose and roll their own IP address range filtering. 
 
-#### Related CVEs
+As noted in the `Hardening cors-anywhere` guidelines below, this endpoint exemplifies the inherent issues with denylisting (and, but to a slightly lesser degree, allowlisting): alternative nomenclature forms for IPs and URLs, as well as other methodologies for allowlist/denylist filter bypass, are a thing. 
+
+#### References
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-28918
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-29418
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-29424
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2011-1499
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2003-0993
-- See also `GET / private` list of related
+- See also [GET / private](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md#get-private) list of related
+- https://github.com/ospfranco/link-preview-js/pull/117
 
 ### GET /safe_public 
-(See `GET /safe_private`).
+(See [GET /safe_private](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md#get-safe_private)).
 
 ### GET /next/:nextRequest
-This endpoint doesn't literally use `cors-anywhere`, but rather artistically reimplements the issue for comparison purposes.
+This endpoint demonstrates the core issue I observe with an open proxy or reverse proxy: it is *open*, hence a clever attacker can use it to launder their requests.
 
-To explore literal usage of `cors-anywhere`, try the `GET /cors-anywhere` endpoint.
+Further notice that this endpoint (and several of the others) involve a DNS lookup to ensure the location is advertised. We can defeat this through DNS rebinding if we choose. We might also not even bother to introduce that extra layer of indirection in some situations. If something is available on intranet DNS and we're on a system on the intranet, chances are dns.lookup() will happily find intranet resources for us. 
 
-Quoting the description of `cors-anywhere`, 
+#### References
+- https://highon.coffee/blog/ssrf-cheat-sheet/#dns-rebinding-attempts
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-25876
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-5464
 
-    CORS Anywhere is a NodeJS proxy which adds CORS headers to the proxied request.
+### GET /cors-anywhere
+The intended goal of this package as can be inferred from its documentation on Github is to proxy a request to anywhere, but including CORS headers. 
 
-    The url to proxy is literally taken from the path, validated and proxied. The protocol part of the proxied URI is optional, and defaults to "http". If port 443 is specified, the protocol defaults to "https".
+I'm not intending to be rude to the package maintainer or say their software is bad. The maintainer/creator built something that is rather useful for its intended purpose! If you set up a proxy or reverse proxy without any security hardening or restriction on what can be requested through your proxy you may however end up unintentionally enabling LFI, RFI, attackers who wish to map your internal network, and other variants on request forgery.
 
-    This package does not put any restrictions on the http methods or headers, except for cookies.
-
-Check out the request examples in the `cors-anywhere` README for more.
+#### Hardening `cors-anywhere`
+Some general guidance for safer usage of `cors-anywhere`:
+- configure rate-limiting of proxied requests so that you don't inadvertently become DoS-as-a-Service thus a nuisance to other locations on the Internet (probably also important if you happen to pay for your compute usage!)
+- configure an Origin "whitelist" (allowlist) to restrict what can be proxied to only the resources you need
+- If you choose to denylist ("blacklist") instead of allowlist, consult a few SSRF cheat sheets to get a good idea of what to baseline-deny. Please do note though that it's better to deny all by default and allow just what you intend (allowlist), than to deny just a few things by default and allow everything else (denylist), since it's easier to understand what the expected happy-path and failure results are in an allowlist scenario.
+- Also keep in mind that allowlist and denylist filter bypasses are [still very much a thing](https://highon.coffee/blog/ssrf-cheat-sheet/)
 
 #### References 
 - https://github.com/Rob--W/cors-anywhere
-
-### GET /cors-anywhere
-TBD
+- 
 
 ### GET /library/books/:bookFileName
+This endpoint demonstrates LFI.
+
+#### References
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32409
 
 ### GET /ftp
 
@@ -78,7 +89,6 @@ TBD
 
 ### PATCH /host
 The `Host`, `Location`, `X-Forwarded`, or `X-Forwarded-For` headers can potentially be vulnerable to SSRF since these headers are frequently in use for application-layer routing purposes. Sometimes SSRF is possible through other headers, but I find that large hosting providers may consider an "open reverse proxy" like this a feature rather than a bug. 
-
 
 #### Further References
 - https://aws.amazon.com/blogs/security/defense-in-depth-open-firewalls-reverse-proxies-ssrf-vulnerabilities-ec2-instance-metadata-service/
@@ -89,11 +99,11 @@ The `Host`, `Location`, `X-Forwarded`, or `X-Forwarded-For` headers can potentia
 ### GET /redirect/:nextRequest
 TBD
 
-#### CVEs this endpoint is inspired by
 
 #### Further References
 - https://docs.aws.amazon.com/amplify/latest/userguide/redirects.html
 
 ## Even More References
 - https://www.hahwul.com/phoenix/ssrf-open-redirect/
-
+- https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html
+- https://highon.coffee/blog/ssrf-cheat-sheet/
