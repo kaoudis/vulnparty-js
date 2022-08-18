@@ -1,10 +1,16 @@
 # Vulnerabilities
 
-The following document describes the vulnerabilities intentionally included in this server, but may not fully encompass everything that could be fixed within vulnparty.
+I'm not intending to be rude to the package maintainers of the dependencies included here, nor am I trying to say their software is bad, since that would be a subjective - and incorrect - statement. 
 
-As you might notice, the main foci here are SSRF, RFI, LFI, and open redirects, though some endpoints are exploitable additional ways. Addition of other types of vulns is welcome, but addition of related vulns or new and weird varities of vulns already demoed here would be especially awesome.
+The maintainers/creators of the included dependencies built things that are useful for their intended purpose, but depending on how used may also be useful for unintended (attacker) purposes. A large percentage of software in the world, if stood up without thoughtful consideration for security, will be insecure as deployed, even if there are optional countermeasure options someone could use to make that software more secure. Without [secure default](https://en.wikipedia.org/wiki/Secure_by_default) configuration (or even making the insecure thing much harder or impossible to do and making the secure thing the easiest option), it's probable such software will be used insecurely. 
 
-## The Endpoints
+From the most recent OWASP Top 10 list, it's clear that [Insecure Design](https://owasp.org/Top10/A04_2021-Insecure_Design/) and [Security Misconfiguration](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/) (along with [SSRF](https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/) directly, not to mention [Vulnerable and Outdated Components](https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/)!) are among the issues the OWASP foundation thinks are most critical in web application security at present. 
+
+The following document describes the vulnerabilities intentionally included in this server, but may not fully encompass everything that could be fixed within vulnparty. I've included a bunch of links to similar vulnerabilities, categories of vulnerabilities, and guides on how to prevent (or exploit) vulns like these, in order to put things in the proper context.
+
+The main foci here are SSRF, RFI, LFI, and open redirects, though some endpoints are exploitable additional ways. Addition of other types of vulns is welcome, but addition of related vulns or new and weird varieties of vulns already demoed here would be especially awesome.
+
+## Endpoints
 
 ### GET /private
 This endpoint relies on a vulnerable version of the `private-ip` JS package. It also does some entirely inappropriate things when returning error responses.
@@ -64,7 +70,7 @@ Further notice that this endpoint (and a few of the others) apply a DNS lookup t
 ### GET /cors-anywhere
 The intended goal of this package as can be inferred from its documentation on Github is to proxy a request to anywhere, but including CORS headers. 
 
-I'm not intending to be rude to the package maintainer or say their software is bad. The maintainer/creator built something that is rather useful for its intended purpose! If you set up a proxy or reverse proxy without any security hardening or restriction on what can be requested through your proxy you may however end up unintentionally enabling LFI, RFI, attackers who wish to map your internal network, and other variants on request forgery.
+If you set up a proxy or reverse proxy without any security hardening or restriction on what can be requested through your proxy you may however end up unintentionally enabling LFI, RFI, attackers who wish to map your internal network, and other variants on request forgery.
 
 #### Hardening `cors-anywhere`
 Some general guidance for safer usage of `cors-anywhere`:
@@ -75,7 +81,8 @@ Some general guidance for safer usage of `cors-anywhere`:
 
 #### References 
 - https://github.com/Rob--W/cors-anywhere
-- 
+- https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-1213
+
 
 ### GET /library/books/:bookFileName
 This endpoint demonstrates LFI. As with many of the other endpoints, the attacker can manipulate the response messages to figure out what is happening.
@@ -114,3 +121,4 @@ TBD
 - https://www.hahwul.com/phoenix/ssrf-open-redirect/
 - https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html
 - https://highon.coffee/blog/ssrf-cheat-sheet/
+- https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/
