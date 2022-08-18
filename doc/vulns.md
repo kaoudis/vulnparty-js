@@ -36,7 +36,7 @@ This endpoint is the inverse of `/private`. It allows you to make the `nextReque
 ### GET /safe_private
 This endpoint (and `GET /safe_public`) are intended to demonstrate what might happen if a feature team were provided some kind of security report - maybe a CVE, maybe a ticket from some kind of internal system or internal security team - about their HTTP API without any useful security guidance. Or, perhaps the team were resistant to making business logic changes as part of fixing the vulnerable endpoint. Our imaginary team, instead of bumping the vulnerable dependency, chooses to switch to a different library for the same purpose and roll their own IP address range filtering. 
 
-As noted in the `Hardening cors-anywhere` guidelines below, this endpoint exemplifies the inherent issues with denylisting (and, but to a slightly lesser degree, allowlisting): alternative nomenclature forms for IPs and URLs, as well as other methodologies for allowlist/denylist filter bypass, are a thing. 
+As noted in the [Hardening cors-anywhere](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md#hardening-cors-anywhere) guidelines below, this endpoint exemplifies the inherent issues with denylisting (and, but to a slightly lesser degree, allowlisting): alternative nomenclature forms for IPs and URLs, as well as other methodologies for allowlist/denylist filter bypass, are a thing. 
 
 #### References
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-28918
