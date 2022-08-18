@@ -1,6 +1,7 @@
 const express = require("express");
 const { response } = require("express");
 
+const { corsHost, corsPort } = require("./cors-anywhere");
 const ftpGet = require("./ftp");
 const { get, headers } = require("./get");
 const { getNext, patch } = require("./dns_lookups");
@@ -84,6 +85,13 @@ app.get("/ftp", (request, response) => {
 app.patch("/host", (request, response) => {
   logger.debug("PATCH /host");
   patch(request, response);
+});
+
+app.get("/cors-anywhere", (request, response) => {
+  const queryParams = url.parse(request.url, true).query;
+  const loc = queryParams.nextRequest;
+  logger.debug(`GET '/cors-anywhere?nextRequest=${loc}', redirecting to CORS proxy to hit ${loc}`);
+  response.redirect(301, `${corsHost}:${corsPort}/${loc}`);
 });
 
 module.exports = server.listen(port, (err) => {

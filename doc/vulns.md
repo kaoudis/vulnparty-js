@@ -16,7 +16,7 @@ The main foci here are SSRF, RFI, LFI, and open redirects, though some endpoints
 This endpoint relies on a vulnerable version of the `private-ip` JS package. It also does some entirely inappropriate things when returning error responses.
 
 #### What is private-ip?
-`private-ip`'s interface is designed to the question of whether an IP address is private or public.
+`private-ip`'s interface is designed to answer the question of whether an IP address should be considered private or public. It functions as a somewhat rudimentary allowlist/denylist, or could be used as a component of a more finely grained allow/deny policy.
 
 #### References
 - https://github.com/frenchbread/private-ip
@@ -41,9 +41,9 @@ This endpoint is the inverse of `/private`. It allows you to make the `nextReque
 (See [GET /private](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md#get-private)).
 
 ### GET /safe_private
-This endpoint (and `GET /safe_public`) are intended to demonstrate what might happen if a feature team were provided some kind of security report - maybe a CVE, maybe a ticket from some kind of internal system or internal security team - about their HTTP API without any useful security guidance. Or, perhaps the team were resistant to making other changes to the existing logic as part of fixing the vulnerable endpoint? Choose your own adventure. Let's say our imaginary feature team, instead of bumping the vulnerable dependency to a safer version and cleaning up the other potentially exploitable issues with this endpoint, chooses to switch to a different library (netmask) and roll their own IP address range filtering. 
+This endpoint (and `GET /safe_public`) are intended to demonstrate what might happen if a feature team were provided some kind of security report - maybe a CVE, maybe a ticket from some kind of internal system or internal security team - about their HTTP API without any useful security guidance. Or, perhaps the team would not make other changes to the existing logic as part of fixing the vulnerable endpoint? Choose your own adventure. Let's say (without judgement) our imaginary feature team, instead of bumping the vulnerable dependency to the most recent (therefore likely safer) version and cleaning up the other potentially exploitable issues with this endpoint, chooses to switch from using private-ip to a new library, netmask, and decides to roll their own IP address range filtering. 
 
-As noted in the [Hardening cors-anywhere](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md#hardening-cors-anywhere) guidelines below, this endpoint exemplifies the inherent issues with denylisting (and, but to a slightly lesser degree, allowlisting): alternative nomenclature forms for IPs and URLs, as well as other methodologies for allowlist/denylist filter bypass, are a thing. 
+As also noted in the [hardening cors-anywhere](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md#hardening-cors-anywhere) guidelines below, this endpoint exemplifies the inherent issues with incomplete denylisting (and allowlisting): alternative nomenclature forms for IPs and URLs, as well as other methodologies for allowlist/denylist filter bypass, exist. 
 
 #### References
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2021-28918
@@ -57,9 +57,9 @@ As noted in the [Hardening cors-anywhere](https://github.com/kaoudis/vulnparty-j
 (See [GET /safe_private](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md#get-safe_private)).
 
 ### GET /next/:nextRequest
-This endpoint demonstrates the core issue I observe with an open proxy or reverse proxy: it is *open*, hence a clever attacker can use it to launder their requests.
+An open proxy or reverse proxy can be used to launder requests on behalf of an attacker.
 
-Further notice that this endpoint (and a few of the others) apply a DNS lookup to ensure the location is advertised and not local. As the attacker, we can defeat this minor precaution through DNS rebinding if we choose. We might also not even bother to introduce that extra layer of indirection in some situations. If something is available on intranet DNS and we're on a system on the intranet, chances are dns.lookup() will happily find intranet resources for us. 
+Notice that this endpoint (and a few of the others) applies a DNS lookup to ensure the location requested is advertised over DNS. As the attacker, we might be able to defeat this not-terribly-effective precaution against requests for addresses like localhost through DNS rebinding. We might also not even bother to introduce that extra layer of indirection, though it might be useful in some situations. If something is available on intranet DNS and we're on a system on the intranet, chances are `dns.lookup()` may happily find intranet resources for us without any further work needed on our part. 
 
 #### References
 - https://highon.coffee/blog/ssrf-cheat-sheet/#dns-rebinding-attempts
@@ -68,16 +68,16 @@ Further notice that this endpoint (and a few of the others) apply a DNS lookup t
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-5464
 
 ### GET /cors-anywhere
-The intended goal of this package as can be inferred from its documentation on Github is to proxy a request to anywhere, but including CORS headers. 
+The [cors-anywhere](https://github.com/Rob--W/cors-anywhere/blob/master/lib/help.txt) package proxies requests, but adds CORS headers, and automatically follows redirects.
 
 If you set up a proxy or reverse proxy without any security hardening or restriction on what can be requested through your proxy you may however end up unintentionally enabling LFI, RFI, attackers who wish to map your internal network, and other variants on request forgery.
 
 #### Hardening `cors-anywhere`
-Some general guidance for safer usage of `cors-anywhere`:
-- configure rate-limiting of proxied requests so that you don't inadvertently become DoS-as-a-Service thus a nuisance to other locations on the Internet (probably also important if you happen to pay for your compute usage!)
-- configure an Origin "whitelist" (allowlist) to restrict what can be proxied to only the resources you need
-- If you choose to denylist ("blacklist") instead of allowlist, consult a few SSRF cheat sheets to get a good idea of what to baseline-deny. Please do note though that it's better to deny all by default and allow just what you intend (allowlist), than to deny just a few things by default and allow everything else (denylist), since it's easier to understand what the expected happy-path and failure results are in an allowlist scenario.
-- Also keep in mind that allowlist and denylist filter bypasses are [still very much a thing](https://highon.coffee/blog/ssrf-cheat-sheet/)
+Some general guidance for safer usage of `cors-anywhere`, expanding on their setup [documentation](https://github.com/Rob--W/cors-anywhere#documentation):
+- Ideally, configure rate-limiting of proxied requests so that you don't inadvertently become DoS-as-a-Service thus a nuisance to other locations on the Internet (probably also important if you happen to pay for your compute usage!). This rate limiting may need to match serverside rate limiting the resource providers use, so that your address does not become banned or downlimited.
+- Ideally, configure an Origin "whitelist" (allowlist) to restrict what can be proxied to only the resources you need
+- Second-best (compared to allowlisting) is to denylist ("blacklist") instead of allowlist. Consider consulting a few SSRF cheat sheets to get a good idea of what to baseline-deny. Please do note though that it's better to deny all by default and allow just what you intend (allowlist), than to deny just a few things by default and allow everything else (denylist), since it's easier to understand what the expected happy-path and failure results are in an allowlist scenario.
+- Also keep in mind that allowlist and denylist filter bypasses are [very much a thing](https://highon.coffee/blog/ssrf-cheat-sheet/)
 
 #### References 
 - https://github.com/Rob--W/cors-anywhere
