@@ -1,5 +1,6 @@
 const express = require("express");
 const { response } = require("express");
+const url = require("url");
 
 const { corsHost, corsPort } = require("./cors-anywhere");
 const ftpGet = require("./ftp");
@@ -91,7 +92,7 @@ app.get("/cors-anywhere", (request, response) => {
   const queryParams = url.parse(request.url, true).query;
   const loc = queryParams.nextRequest;
   logger.debug(`GET '/cors-anywhere?nextRequest=${loc}', redirecting to CORS proxy to hit ${loc}`);
-  response.redirect(301, `${corsHost}:${corsPort}/${loc}`);
+  response.redirect(302, `${corsHost}:${corsPort}/${loc}`);
 });
 
 module.exports = server.listen(port, (err) => {

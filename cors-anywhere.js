@@ -20,10 +20,6 @@ const denylistedRequestHeaders = [
 
 const startupTasks = () => {
     logger.info(`Starting CORS Anywhere Proxy on ${corsHost}:${corsPort}`);
-    logger.info("CORS proxy requires request headers: ");
-    requiredRequestHeaders.forEach(function (header) {logger.info(`${header},`)});
-    logger.info("CORS proxy disallows the following request headers: ");
-    denylistedRequestHeaders.forEach(function (header) {logger.info(`${header},`)});
 };
 
 proxy
