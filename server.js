@@ -2,7 +2,7 @@ const express = require("express");
 const { response } = require("express");
 const url = require("url");
 
-const { corsHost, corsPort } = require("./cors-anywhere");
+const { corsHost, corsPort, corsProxyServer } = require("./cors-anywhere");
 const ftpGet = require("./ftp");
 const { get, headers } = require("./get");
 const { getNext, patch } = require("./dns_lookups");
@@ -20,6 +20,11 @@ app.use((request, response, next) => {
   next();
 });
 
+// start the cors-anywhere proxy
+corsProxyServer.listen(corsPort, corsHost, function () {
+  logger.info(`Starting CORS Anywhere Proxy on ${corsHost}:${corsPort}`);
+});
+
 // if the potential nextRequest location is "private" according to
 // private-ip 1.0.5, request it
 app.get("/private", (request, response) => {
@@ -34,14 +39,14 @@ app.get("/public", (request, response) => {
   get(false, request, response);
 });
 
-// if the potential nextRequest location is "private" according to 
+// if the potential nextRequest location is "private" according to
 // netmask 1.0.6, request it
 app.get("/safe_private", (request, response) => {
   logger.debug("GET /safe_private");
   safeGet(true, request, response);
 });
 
-// if the potential nextRequest location is "public" according to 
+// if the potential nextRequest location is "public" according to
 // netmask 1.0.6, request it
 app.get("/safe_public", (request, response) => {
   logger.debug("GET /safe_public");
@@ -90,9 +95,10 @@ app.patch("/host", (request, response) => {
 
 app.get("/cors-anywhere", (request, response) => {
   const queryParams = url.parse(request.url, true).query;
-  const loc = queryParams.nextRequest;
-  logger.debug(`GET '/cors-anywhere?nextRequest=${loc}', redirecting to CORS proxy to hit ${loc}`);
-  response.redirect(302, `${corsHost}:${corsPort}/${loc}`);
+  // untrusted user input rightttt into the redirect
+  const redirect = `http://${corsHost}:${corsPort}/${queryParams.nextRequest}`;
+  logger.debug(`GET '/cors-anywhere?nextRequest=${queryParams.nextRequest}', redirecting to ${redirect}`);
+  response.redirect(302, `${redirect}`);
 });
 
 module.exports = server.listen(port, (err) => {
