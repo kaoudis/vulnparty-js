@@ -23,7 +23,6 @@
     "ftp": "^0.3.10",
     "http-proxy": "^1.18.1",
     "netmask": "1.0.6",
-    "node-libcurl": "^2.3.3",
     "private-ip": "1.0.5",
     "url": "^0.11.0",
     "winston": "^3.3.3"
@@ -31,13 +30,19 @@
   "scripts": {
     "install test": "npm install --only=dev",
     "test": "mocha test/*.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "eslint --config=./.eslintrc *.js",
+    "fix": "eslint --config=./.eslintrc --fix *.js"
   },
   "devDependencies": {
-    "eslint": "^8.22.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "prettier": "^2.7.1"
+    "@babel/core": "7.12.10",
+    "@babel/eslint-parser": "7.11.0",
+    "eslint": "7.5.0",
+    "eslint-config-prettier": "1.6.0",
+    "eslint-plugin-prettier": "2.1.2",
+    "eslint-plugin-security": "1.4.0",
+    "prettier": "2.0.2",
+    "prettier-eslint": "3.0.5"
   },
   "directories": {
     "test": "test"

@@ -53,7 +53,7 @@ app.get("/safe_public", (request, response) => {
 });
 
 // performs a DNS lookup to figure out whether or not to request a thing
-app.get("/next/:nextRequest", (request, _) => {
+app.get("/next/:nextRequest", (request) => {
   logger.debug(`GET /next/${request.params.nextRequest}`);
   getNext(request.params.nextRequest);
 });
@@ -100,7 +100,9 @@ app.get("/cors-anywhere", (request, response) => {
 
   // plonk that untrusted user input rightttt into the redirect
   const redirect = `http://${corsHost}:${corsPort}/${queryParams.nextRequest}`;
-  logger.debug(`GET '/cors-anywhere?nextRequest=${queryParams.nextRequest}', redirecting to ${redirect}`);
+  logger.debug(
+    `GET '/cors-anywhere?nextRequest=${queryParams.nextRequest}', redirecting to ${redirect}`
+  );
   response.redirect(302, `${redirect}`);
 });
 
