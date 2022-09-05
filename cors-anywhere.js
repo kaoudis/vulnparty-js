@@ -15,7 +15,6 @@ const denylist = [
 ];
 
 const requiredRequestHeaders = [
-    "Origin",
 ];
 
 const denylistedRequestHeaders = [

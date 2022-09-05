@@ -1,10 +1,10 @@
 # Introduction
 
-I started putting this API server together so as to learn from doing in early 2021ish and have been adding bits and pieces ever since. I've listed some similar vulns and things I was thinking about with each endpoint under `References`. As with the rest of this repo, additions are welcome here, too.
+I started putting this API server together in order to learn more about what makes people write vulnerable code and to learn more about what kinds of common mistakes I might be unintentionally making, by intentionally writing vulnerable code. I've listed some similar vulns and things I was thinking about with each endpoint under `References`. As with the rest of this repo, additions are welcome here.
 
 I'm not intending to be rude to the package maintainers of any dependencies included here, nor am I trying to say their software is bad, since that would be a subjective - and incorrect - statement. A large percentage of software in the world, if stood up without thoughtful consideration for security, will be insecure when deployed with shipped defaults, even if there are optional countermeasure options someone could use to make that software more secure. 
 
-[Insecure Design](https://owasp.org/Top10/A04_2021-Insecure_Design/) and [Security Misconfiguration](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/) (along with [SSRF](https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/) directly, not to mention [Vulnerable and Outdated Components](https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/)!) are some of the most critical categories of vulnerability in web application security currently. 
+[Insecure Design](https://owasp.org/Top10/A04_2021-Insecure_Design/) and [Security Misconfiguration](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/) (along with [SSRF](https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/) directly, not to mention [Vulnerable and Outdated Components](https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/)!) are some of the most critical categories of vulnerability in web application security currently. I will be the first to admit I have a bit of a soapbox about [secure by default](https://en.wikipedia.org/wiki/Secure_by_default) design - that is, make the secure thing the easiest (or even only) possible thing, and make the insecure thing difficult to do, without impacting business-critical functionality.
 
 # What's here?
 
@@ -48,7 +48,7 @@ This endpoint is the inverse of `/private`. It allows you to make the `nextReque
 (See [GET /private](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md#get-private)).
 
 ### GET /safe_private
-This endpoint (and `GET /safe_public`) are intended to demonstrate what might happen if a feature team were provided some kind of security report - maybe a CVE, maybe a ticket from some kind of internal system or internal security team - about their HTTP API without any useful security guidance. Or, perhaps the team would not make other changes to the existing logic as part of fixing the vulnerable endpoint? Choose your own adventure. Let's say (without judgement) our imaginary feature team, instead of bumping the vulnerable dependency to the most recent (therefore likely safer) version and cleaning up the other potentially exploitable issues with this endpoint, chooses to switch from using private-ip to a new library, netmask, and decides to roll their own IP address range filtering. 
+This endpoint (and `GET /safe_public`) are intended to demonstrate what might happen if a feature team were provided some kind of security report - maybe a CVE, maybe a ticket from some kind of internal system or internal security team - about their HTTP API without any useful security guidance. Or, perhaps the team would not make other changes to the existing logic as part of fixing the vulnerable endpoint? Choose your own adventure. Let's say (without judgement) our imaginary feature team, instead of bumping the vulnerable dependency to the most recent (therefore likely safer) version and cleaning up the other potentially exploitable issues with this endpoint, chooses to switch from using private-ip to a new library, netmask, and decides to roll their own IP address range filtering, since that's what is the most broken in old versions of private-ip. 
 
 As also noted in the [hardening cors-anywhere](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md#hardening-cors-anywhere) guidelines below, this endpoint exemplifies the inherent issues with incomplete denylisting (and allowlisting): alternative nomenclature forms for IPs and URLs, as well as other methodologies for allowlist/denylist filter bypass, exist. 
 
@@ -77,7 +77,7 @@ Notice that this endpoint (and a few of the others) applies a DNS lookup to ensu
 ### GET /cors-anywhere
 The [cors-anywhere](https://github.com/Rob--W/cors-anywhere/blob/master/lib/help.txt) package proxies requests, but adds CORS headers, and automatically follows redirects.
 
-If you set up a proxy or reverse proxy without any security hardening or restriction on what can be requested through your proxy you may however end up unintentionally enabling LFI, RFI, attackers who wish to map your internal network, and other variants on request forgery.
+If you set up a proxy or reverse proxy without any security hardening or restriction on what can be requested through your proxy you may unintentionally enable LFI, RFI, mapping your internal network, and other variants on request forgery.
 
 #### Hardening `cors-anywhere`
 Some general guidance for safer usage of `cors-anywhere`, expanding on their setup [documentation](https://github.com/Rob--W/cors-anywhere#documentation):
