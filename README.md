@@ -75,18 +75,18 @@ npm install && \
 npm run start
 ```
 
-Alternately you can use `node server.js` to run the server.
-
 ## Let's forge some requests?
 The only required query param for most of the server endpoints (which is what we'll be SSRFing) is `nextRequest`. The ftp endpoint also needs a filename to retrieve.
 
 You'll want to watch both the server output log and the clientside output to get a sense of what's happening.
 
 ## Start the server (dependencies up to date)
+
 ```
-node server.js
+npm run start
 ```
-You'll see some console output in the server tab which may be helpful. There's also more verbose output in `server_log.json`.
+
+You'll see some console output in the server tab which may be helpful. There's also more verbose output in `server_log.json`, which you can `tail -f` if you like.
 
 ## Example client usage for a few of the endpoints
 This is just to get you started. Try using lots of different stuff to fill out 
