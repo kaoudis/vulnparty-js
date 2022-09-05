@@ -1,5 +1,4 @@
 const express = require("express");
-const { response } = require("express");
 const url = require("url");
 
 const { corsHost, corsPort, corsProxyServer } = require("./cors-anywhere");
@@ -73,7 +72,8 @@ app.get("/ftp", (request, response) => {
 
   // Denylist sketch. the idea here is to show how a well-intentioned denylist
   // may not end up providing that much security since there are plenty of ways
-  // to get around this.
+  // to get around this. To be safer, it would be better to use net.isIPv4(loc)
+  // here and then to block localhost access at the infrastructure level.
   if (
     !fileName.includes("localhost") &&
     !loc.includes("localhost") &&
@@ -95,14 +95,12 @@ app.patch("/host", (request, response) => {
 
 app.get("/cors-anywhere", (request, response) => {
   const queryParams = url.parse(request.url, true).query;
-  const url = queryParams.nextRequest;
-
   // see https://github.com/Rob--W/cors-anywhere/blob/master/lib/cors-anywhere.js#L39
   // in order to understand what is disallowed
 
   // plonk that untrusted user input rightttt into the redirect
-  const redirect = `http://${corsHost}:${corsPort}/${url}`;
-  logger.debug(`GET '/cors-anywhere?nextRequest=${url}', redirecting to ${redirect}`);
+  const redirect = `http://${corsHost}:${corsPort}/${queryParams.nextRequest}`;
+  logger.debug(`GET '/cors-anywhere?nextRequest=${queryParams.nextRequest}', redirecting to ${redirect}`);
   response.redirect(302, `${redirect}`);
 });
 
