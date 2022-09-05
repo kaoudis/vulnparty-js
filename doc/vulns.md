@@ -1,14 +1,22 @@
-# Vulnerabilities
+# Introduction
 
-I'm not intending to be rude to the package maintainers of the dependencies included here, nor am I trying to say their software is bad, since that would be a subjective - and incorrect - statement. 
+I started putting this API server together so as to learn from doing in early 2021ish and have been adding bits and pieces ever since. I've listed some similar vulns and things I was thinking about with each endpoint under `References`. As with the rest of this repo, additions are welcome here, too.
 
-The maintainers/creators of the included dependencies built things that are useful for their intended purpose, but depending on how used may also be useful for unintended (attacker) purposes. A large percentage of software in the world, if stood up without thoughtful consideration for security, will be insecure as deployed, even if there are optional countermeasure options someone could use to make that software more secure. Without [secure default](https://en.wikipedia.org/wiki/Secure_by_default) configuration (or even making the insecure thing much harder or impossible to do and making the secure thing the easiest option), it's probable such software will be used insecurely. 
+I'm not intending to be rude to the package maintainers of any dependencies included here, nor am I trying to say their software is bad, since that would be a subjective - and incorrect - statement. A large percentage of software in the world, if stood up without thoughtful consideration for security, will be insecure when deployed with shipped defaults, even if there are optional countermeasure options someone could use to make that software more secure. 
 
-From the most recent OWASP Top 10 list, it's clear that [Insecure Design](https://owasp.org/Top10/A04_2021-Insecure_Design/) and [Security Misconfiguration](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/) (along with [SSRF](https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/) directly, not to mention [Vulnerable and Outdated Components](https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/)!) are among the issues the OWASP foundation thinks are most critical in web application security at present. 
+[Insecure Design](https://owasp.org/Top10/A04_2021-Insecure_Design/) and [Security Misconfiguration](https://owasp.org/Top10/A05_2021-Security_Misconfiguration/) (along with [SSRF](https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/) directly, not to mention [Vulnerable and Outdated Components](https://owasp.org/Top10/A06_2021-Vulnerable_and_Outdated_Components/)!) are some of the most critical categories of vulnerability in web application security currently. 
 
-The following document describes the vulnerabilities intentionally included in this server, but may not fully encompass everything that could be fixed within vulnparty. I've included a bunch of links to similar vulnerabilities, categories of vulnerabilities, and guides on how to prevent (or exploit) vulns like these, in order to put things in the proper context.
+# What's here?
 
-The main foci here are SSRF, RFI, LFI, and open redirects, though some endpoints are exploitable additional ways. Addition of other types of vulns is welcome, but addition of related vulns or new and weird varieties of vulns already demoed here would be especially awesome.
+The main foci here are redirect and request forgery related vulns, though some endpoints are exploitable additional ways. 
+
+The following may not fully encompass everything that could be fixed within vulnparty if someone were to try to make it as secure as possible (again, any PRs to do this will be rejected - only add insecurities and documentation to this repo please). 
+
+I've included a bunch of links to similar vulnerabilities, categories of vulnerabilities, and guides on how to prevent (or exploit) vulns like these, in order to put things in the proper context.
+
+## Contributing
+
+Addition of related vulns or new and weird varieties of vulns already demoed here would be especially awesome. Addition of documentation for existing vulns in the codebase (or why some of the vulnerable depedencies are so) would also be welcome.
 
 ## Endpoints
 
@@ -31,8 +39,7 @@ This endpoint relies on a vulnerable version of the `private-ip` JS package. It 
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-29188
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32409
 - [DEF CON 29 talk about IP parsing confusion referencing private-ip and others](https://www.youtube.com/watch?v=_o1RPJAe4kU)
-- sick.codes [advisory](https://github.com/sickcodes/security/blob/master/advisories/SICK-2020-022.md)
-- [private-ip fix PR](https://github.com/frenchbread/private-ip/pull/2) (Sick Codes, Nick Sahler)
+- sick.codes [advisory](https://github.com/sickcodes/security/blob/master/advisories/SICK-2020-022.md), [private-ip fix PR](https://github.com/frenchbread/private-ip/pull/2)
 
 ### GET /public
 This endpoint is the inverse of `/private`. It allows you to make the `nextRequest` only if the private-ip based filter judges the provided IP address is not part of a private range.
