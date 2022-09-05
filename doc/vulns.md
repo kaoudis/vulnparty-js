@@ -82,7 +82,7 @@ If you set up a proxy or reverse proxy without any security hardening or restric
 #### Hardening `cors-anywhere`
 Some general guidance for safer usage of `cors-anywhere`, expanding on their setup [documentation](https://github.com/Rob--W/cors-anywhere#documentation):
 - Ideally, configure rate-limiting of proxied requests so that you don't inadvertently become DoS-as-a-Service thus a nuisance to other locations on the Internet (probably also important if you happen to pay for your compute usage!). This rate limiting may need to match serverside rate limiting the resource providers use, so that your address does not become banned or downlimited.
-- Ideally, configure an Origin "whitelist" (allowlist) to restrict what can be proxied to only the resources you need
+- Ideally, require the Origin header and configure an Origin "whitelist" (allowlist) to restrict what can be proxied to only the resources you need
 - Second-best (compared to allowlisting) is to denylist ("blacklist") instead of allowlist. Consider consulting a few SSRF cheat sheets to get a good idea of what to baseline-deny. Please do note though that it's better to deny all by default and allow just what you intend (allowlist), than to deny just a few things by default and allow everything else (denylist), since it's easier to understand what the expected happy-path and failure results are in an allowlist scenario.
 - Also keep in mind that allowlist and denylist filter bypasses are [very much a thing](https://highon.coffee/blog/ssrf-cheat-sheet/)
 
@@ -92,7 +92,9 @@ Some general guidance for safer usage of `cors-anywhere`, expanding on their set
 
 
 ### GET /library/books/:bookFileName
-This endpoint demonstrates LFI. As with many of the other endpoints, the attacker can manipulate the response messages to figure out what is happening.
+This API endpoint demonstrates LFI. 
+
+As with several of the other endpoints, the attacker can manipulate the response messages to figure out what is happening.
 
 #### References
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32409

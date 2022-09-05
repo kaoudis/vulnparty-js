@@ -95,9 +95,14 @@ app.patch("/host", (request, response) => {
 
 app.get("/cors-anywhere", (request, response) => {
   const queryParams = url.parse(request.url, true).query;
-  // untrusted user input rightttt into the redirect
-  const redirect = `http://${corsHost}:${corsPort}/${queryParams.nextRequest}`;
-  logger.debug(`GET '/cors-anywhere?nextRequest=${queryParams.nextRequest}', redirecting to ${redirect}`);
+  const url = queryParams.nextRequest;
+
+  // see https://github.com/Rob--W/cors-anywhere/blob/master/lib/cors-anywhere.js#L39
+  // in order to understand what is disallowed
+
+  // plonk that untrusted user input rightttt into the redirect
+  const redirect = `http://${corsHost}:${corsPort}/${url}`;
+  logger.debug(`GET '/cors-anywhere?nextRequest=${url}', redirecting to ${redirect}`);
   response.redirect(302, `${redirect}`);
 });
 
