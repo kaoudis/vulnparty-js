@@ -27,13 +27,20 @@ I have this idea that to learn to code securely, it's useful to learn to write
 vulnerable code, hack it to prove it's vulnerable, then intentionally *write secure code*
 next time.
 
-### What's this good for? 
-You can:
-- practice your code audit and documentation skills
+### What's this good for?
+If you try to just run this web server and black box it, you're probably gonna be frustrated.
+
+This app is designed as a grey box or even white box set of exercises where each endpoint has a series of things wrong with it. If you are truly stuck, please feel free to file an issue here or DM on Twitter. 
+
+#### Recommended route
+Pick an endpoint, and read the code and possibly the [https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md](vulns.md) entry. Then run the server and test the endpoint with your tooling of choice (anything that can send an http request will do). What vulnerabilities do you spot? Do you see similarities to what is documented? Do you see anything that is undocumented and obviously wrong, broken, or bad practice?
+
+#### You can:
+- practice your code auditing and documentation skills
 - practice your grey-box web app hacking
 - practice your vulnerable coding; PRs that add vulnerable features and describe why the code is vulnerable and how you exploited it are welcome!
 - practice your JS coding standards; I'd like this app to follow https://google.github.io/styleguide/jsguide.html eventually
-- just spin the app up and use it as a test ground for any payloads you like
+- even just spin the app up and use it as a test ground for payloads, once you understand what the endpoints do
 
 See [vuln documentation here](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md).
 
@@ -59,6 +66,8 @@ port isn't open, you might see ECONNREFUSED to 80 instead of whatever the port y
 trying to hit was.
 
 # How to run
+
+## Warning: if you just spin up and black box this app, you will probably not get much out of it.
 
 ## Install needed dependencies and start the server (first time use)
 If you have dependency-related issues or issues running the server in order to try payloads against it, please file an issue in this repository.
