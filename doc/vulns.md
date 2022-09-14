@@ -18,10 +18,6 @@ I've included a bunch of links to similar vulnerabilities, categories of vulnera
 
 Addition of related vulns or new and weird varieties of vulns already demoed here would be especially awesome. Addition of documentation for existing vulns in the codebase (or why some of the vulnerable depedencies are so) would also be welcome.
 
-### Can you write Javascript *well*?
-
-No. I first encountered it in approximately middle school in the very early 2000s and have been not-writing it, badly, ever since.
-
 ## Endpoints
 
 ### GET /private
