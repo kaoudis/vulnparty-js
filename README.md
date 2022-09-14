@@ -73,6 +73,11 @@ ARCH
 pacman -S libcurl-gnutls && \
 npm install && \
 npm run start
+
+OSX
+brew install gnutls curl
+npm install && \ 
+npm run start
 ```
 
 ## Let's forge some requests?
