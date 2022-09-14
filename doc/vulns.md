@@ -8,7 +8,7 @@ I'm not intending to be rude to the package maintainers of any dependencies incl
 
 # What's here?
 
-The main foci here are redirect and request forgery related vulns, though some endpoints are exploitable additional ways. 
+The main foci here are redirect and request forgery related serverside vulnerabilities, though some endpoints are exploitable additional ways. 
 
 The following may not fully encompass everything that could be fixed within vulnparty if someone were to try to make it as secure as possible (again, any PRs to do this will be rejected - only add insecurities and documentation to this repo please). 
 
@@ -94,7 +94,7 @@ Some general guidance for safer usage of `cors-anywhere`, expanding on their set
 ### GET /library/books/:bookFileName
 This API endpoint demonstrates LFI. 
 
-As with several of the other endpoints, the attacker can manipulate the response messages to figure out what is happening.
+As with several of the other endpoints, you might notice from the source code that the attacker can manipulate the overly verbose response messages, which differ by execution path taken when handling the client request, to figure out what is happening.
 
 #### References
 - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-32409
