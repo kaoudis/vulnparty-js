@@ -9,7 +9,7 @@ Have an idea or want to see something else here? Make a pull request or open an 
 
 0. Identify the CVE(s), CWE(s), or other vulnerable things you'd like to reproduce in Node here
 1. Code up your commits, preferably including tests to prove your addition works (fails) as intended
-2. Document what you did and how the endpoint or functionality added is meant to be vulnerable, with references, in [the correct place](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md).
+2. Document what you did and how the endpoint or functionality added is meant to be vulnerable, with references, in https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md.
 3. (optional) Add your name or handle to CREDITS.md
 4. Open your PR
 
@@ -33,7 +33,7 @@ If you try to just run this web server and black box it, you're probably gonna b
 This app is designed as a grey box or even white box set of exercises where each endpoint has a series of things wrong with it. If you are truly stuck, please feel free to file an issue here or DM on Twitter. 
 
 #### Recommended route
-Pick an endpoint, and read the code and possibly the [https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md](vulns.md) entry. Then run the server and test the endpoint with your tooling of choice (anything that can send an http request will do). What vulnerabilities do you spot? Do you see similarities to what is documented? Do you see anything that is undocumented and obviously wrong, broken, or bad practice?
+Pick an endpoint, and read the code and possibly the [vuln documentation](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md) entry. Then run the server and test the endpoint with your tooling of choice (anything that can send an http request will do). What vulnerabilities do you spot? Do you see similarities to what is documented? Do you see anything that is undocumented and obviously wrong, broken, or bad practice?
 
 #### You can:
 - practice your code auditing and documentation skills
@@ -42,7 +42,7 @@ Pick an endpoint, and read the code and possibly the [https://github.com/kaoudis
 - practice your JS coding standards; I'd like this app to follow https://google.github.io/styleguide/jsguide.html eventually
 - even just spin the app up and use it as a test ground for payloads, once you understand what the endpoints do
 
-See [vuln documentation here](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md).
+See [vuln documentation here](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md)
 
 ### Why did you build this?
 Even though apps like DVWA and Juice Shop are awesome, someone else already implemented them.
