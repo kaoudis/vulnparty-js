@@ -2,7 +2,7 @@
 This Node app is a toy project I have occasionally added onto 
 to explore what certain web app vulnerabilities might look like in source code, 
 especially SSRF, LFI, and RFI. 
-[GPLv3.0 link](https://www.gnu.org/licenses/gpl-3.0.html) (c) 2022  @kaoudis
+[GPLv3.0 link](https://github.com/kaoudis/vulnparty-js/blob/main/LICENSE) (c) 2022  @kaoudis
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
