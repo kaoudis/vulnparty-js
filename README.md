@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Overview
 In my very much continuing journey to learn to write secure code, I've found the following 
-are useful foundation to know deeply what a type of vulnerability actually is:
+a useful foundation to know deeply what a type of vulnerability actually is:
 - understanding what it means to write *vulnerable* code
 - knowing what the specific type of vuln might look like in source code in the wild
 - understanding what output might look like when vulnerable source code is run (and when 
