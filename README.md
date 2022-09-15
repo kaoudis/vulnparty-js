@@ -251,7 +251,7 @@ vulnerable, with references, in https://github.com/kaoudis/vulnparty-js/blob/mai
 4. Open your PR
 
 ### Starting ideas for contribution / todos
-- complete the unit tests and make an automatic command to run them (test for the bad / 
+- complete the unit tests and make an `npm run` command to run them (test for the bad / 
 expected behaviour and verify it)
 - add [Swagger](https://swagger.io/) documentation for the endpoints
 - add new types of vulns or vulnerable dependencies that can be exploited
