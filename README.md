@@ -26,8 +26,7 @@ are useful foundation to know deeply what a type of vulnerability actually is:
 it would or would *not* differ from output from source code that is not vulnerable!)
 
 ### Assumptions
-You will probably get the most out of this vulnerable app if you aren't yet fully fluent 
-in web app security, **but** do have:
+You will probably be able to get something out of this vulnerable toy app if you have:
 - familiarity with web apps and the client-server model in a distributed environment where 
 the server makes requests to other servers (if you read the [examples](https://github.com/kaoudis/vulnparty-js#example-client-usage-for-a-few-of-the-endpoints) below and they do not 
 make sense, I would recommend you learn about these topics, and then come back!)
@@ -65,64 +64,71 @@ vulnerabilities in source code, let's goooo :)
 
 ### Recommended route
 0. Pick an endpoint from server.js
-1. Trace the code path through and try understand how the endpoint would be intended to work if 
-it wasn't written intentionally vulnerably
-2. Try to spot and categorize what might be wrong!
-3. Check out the [vuln documentation](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md) entry
-4. Finally, if you would like to see the behaviour of the endpoint live, run the server and test 
+1. Trace the code path through and try understand how the endpoint should work if it wasn't 
+intended to be vulnerable
+3. Try to spot and categorize what might be wrong!
+4. Check out the [vuln documentation](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md) 
+for the endpoint
+6. If you would like to see the behaviour of the endpoint live, run the server and test 
 the endpoint with your tooling of choice (anything that can send an http request will do).
 5. Go back and look at the source code again. Does what you saw live make sense with your initial 
 understanding?
 
-What vulnerabilities do you spot? Do you see similarities to what is documented? Do you see 
+What issues do you spot? Do you see similarities to what is documented? Do you see 
 anything that is undocumented and obviously wrong, broken, or bad practice?
 
 See [vuln documentation here](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md)
 
 # How to run
-
-## Note: this app is not really intended to be black boxed, and you probably won't learn much from just spinning it up and bombing it with payloads
-
-## Install needed dependencies and start the server (first time)
-If you have dependency-related issues or issues running the server in order to try payloads 
-against it, please file an issue in this repository.
-
-```
-DEBIAN / UBUNTU
-sudo apt-get install libcurl4-gnutls-dev && \
-npm install && \
-npm run start
-
-ARCH
-pacman -S libcurl-gnutls && \
-npm install && \
-npm run start
-```
-
-## Let's forge some requests?
-The only required query param for most of the server endpoints (which is what we'll be SSRFing) 
-is `nextRequest`. The ftp endpoint also needs a filename to retrieve.
-
-You'll want to watch both the server output log in the window where you're running
-the server, and the clientside output to get the best sense of what's happening.
-
-## Start the server (dependencies up to date)
-
-```
-npm run start
-```
+The only required query param for most of the server endpoints is `nextRequest`. 
+The ftp endpoint also needs a filename to retrieve.
 
 You'll see some console output in the server tab. There's also more verbose 
 output in `server_log.json`, which you can `tail -f` if you would like, but 
 which is likely not necessary to look at to understand what the server is doing.
 
+You'll want to watch both the server output log in the window where you're running
+the server, and the clientside output to get the best sense of what's happening.
+
+If you have dependency-related issues or issues running the server, please file an 
+issue in this repository.
+
+## Note: this app is not really intended to be black boxed, so you probably won't get much from just bombing it with payloads
+
+## Install needed dependencies and start the server (first time)
+```
+$ npm install && npm run start
+```
+
+## Just start the server (after the first install)
+```
+$ npm run start
+```
+
+You should see something like the following output when starting the server: 
+```
+npm WARN npm npm does not support Node.js v10.24.0
+npm WARN npm You should probably upgrade to a newer version of node as we
+npm WARN npm can't make any promises that npm will work with this version.
+npm WARN npm Supported releases of Node.js are the latest release of 4, 6, 7, 8, 9.
+npm WARN npm You can find the latest version at https://nodejs.org/
+
+> vulnparty-server@0.1.0 start /home/user/vulnparty-js
+> node server.js
+
+{ message: 'Starting CORS Anywhere Proxy on 127.0.0.1:8889',
+  level: 'info',
+  timestamp: '2022-09-15T00:43:31.279Z' }
+```
+This bad npm output is okay. In this particular case, we want the vulns! The second message about 
+CORS Anywhere is about a secondary service we also start locally at runtime.
+
 ## Example client usage for a few of the endpoints
 These examples both involve the client (curl) causing the server (vulnparty) to make a request 
-on the client's behalf.
+on the client's behalf; both of the endpoints in these examples are vulnerable to 
+[SSRF](https://portswigger.net/web-security/ssrf). 
 
-Both of the endpoints in these examples are vulnerable to [SSRF](https://portswigger.net/web-security/ssrf). 
-
-Try using anything you can imagine to fill out the `nextRequest` parameter, not just what we use here 
+Try using anything you like to fill out the `nextRequest` parameter, not just what we use here 
 in the examples. You might even try fuzzing the `nextRequest` parameter to find categories of bad 
 input!
 
@@ -131,52 +137,89 @@ input!
 $ curl "localhost:8888/public?nextRequest=127.0.0.1"
 ```
 
-#### `/public` curl expected outcome
-You will see the following output in the window where you are running the server, given the 
-`127.0.0.1` input to the `nextRequest` parameter:
+#### `/public` expected outcome
+You should see the following output appear appended to the log text in the window where you are 
+running the server, given the `127.0.0.1` input to the `nextRequest` parameter:
 
 ```
-
+{ message: 'would not request 127.0.0.1\n',
+  level: 'error',
+  timestamp: '2022-09-15T00:47:21.551Z' }
 ```
 
-Your curl client will get back the following output: 
+Curl should print the following output in the window where you are running it, and then 
+close its connection to the server: 
+```
+would not request 127.0.0.1
 ```
 
-```
+This happens because you have requested a location (127.0.0.1) that the `/public` endpoint 
+considered a [private IP address](https://www.omnisecu.com/tcpip/what-are-private-ip-addresses.php). 
 
-This occurs because . 
-
-#### Attack model
-<>
+#### Getting started attacking the `/public` endpoint
+Let's say we are interested in tricking this endpoint into making a request to a private 
+IP address, even though it is only intended to proxy requests to public IP addresses. How might 
+we encode or change the value of our submitted `nextRequest` so that the endpoint makes the 
+request anyway?
 
 ### Example 2: `/private`
 ```
 $ curl "localhost:8888/private?nextRequest=127.0.0.1"
 ```
 
-#### `private` curl expected outcome
-Server log output:
+#### `private` expected outcome
+Appended serverside output should look something like the following:
 
 ```
-
+{ message: 'Did not successfully GET http://127.0.0.1',
+  level: 'error',
+  timestamp: '2022-09-15T00:55:52.169Z' }
+{ message: 'ECONNREFUSED',
+  level: 'error',
+  timestamp: '2022-09-15T00:55:52.171Z' }
+{ message:
+   { url: 'http://127.0.0.1',
+     method: 'get',
+     headers:
+      { Accept: 'application/json, text/plain, */*',
+        'User-Agent': 'axios/0.21.0' },
+     proxy: false,
+     transformRequest: [ [Function: transformRequest] ],
+     transformResponse: [ [Function: transformResponse] ],
+     timeout: 0,
+     adapter: [Function: httpAdapter],
+     xsrfCookieName: 'XSRF-TOKEN',
+     xsrfHeaderName: 'X-XSRF-TOKEN',
+     maxContentLength: -1,
+     maxBodyLength: -1,
+     validateStatus: [Function: validateStatus],
+     data: undefined },
+  level: 'error',
+  timestamp: '2022-09-15T00:55:52.171Z' }
 ```
 
 Curl client output:
 ```
-
+attempting to request (private=true) 'nextRequest' location 127.0.0.1
 ```
 
-This occurs because .
+Oh no! An error!?
 
-#### Attack model
-<>
+The ECONNREFUSED doesn't mean the vulnparty server is broken, rather that it did exactly
+ what you told it to - make an HTTP GET request to 127.0.0.1 and then proxy back the 
+response to you. The error is that nothing is running on the default port for Axios 
+on your local machine. Since this request was to an IP in one of the "private" ranges, 
+the `/private` endpoint went ahead and tried to make it on your behalf and has now told 
+you that it couldn't connect to anything running there.
 
-### Note 
-Debug logs will be appended to `server_log.json` in the server working directory. `info` 
-level logs will be output when the server runs.
+#### Getting started attacking the `/private` endpoint
+Let's say we are interested in tricking the `/private` endpoint into making a request 
+to a *public* IP address, one that is not found within a private range, even though it
+is only intended to proxy requests to private IP addresses. How might we encode or change 
+the value of our submitted `nextRequest` so that the endpoint makes the request anyway?
 
-### Why is Axios trying to connect to 127.0.0.1:80?
-If Axios cannot find the address/IP/whatever you're trying to forge a request to, it'll
+#### Why is Axios trying to connect to 127.0.0.1:80?
+If Axios cannot find the address/IP/whatever you're trying to forge a request to, it may
 default to 127.0.0.1:80. So if you're trying to hit a port on your local machine but that 
 port isn't open, you might see ECONNREFUSED to 80 instead of whatever the port you were 
 trying to hit was.
