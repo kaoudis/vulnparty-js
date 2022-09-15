@@ -49,8 +49,7 @@ vulnerable and how you exploited it are welcome!
 This app is a rough draft of a grey box or even white box set of small exercises where each endpoint 
 has a series of things wrong with it. If you are truly stuck, please feel free to file an issue 
 here or DM [on Twitter](https://twitter.com/kaoudis). As in "real" apps, there's no definite set of 
-right answers, and currently no real spoilers (if you'd like to create an answer key writeup, that 
-would also be welcome).
+right answers (if you'd like to PR an answer key writeup, that would also be welcome).
 
 I wrote this app over time in bits and pieces to teach myself more deeply about how web app vulns 
 actually work. I'm publishing it in the hopes it is also useful to others. However, 
