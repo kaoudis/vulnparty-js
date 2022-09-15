@@ -51,7 +51,7 @@ right answers, and currently no real spoilers (if you'd like to create an answer
 would also be welcome).
 
 I wrote this app over time in bits and pieces to teach myself more deeply about how web app vulns 
-I could find black-box work. I'm publishing it in the hopes it is also useful to others. However, 
+actually work. I'm publishing it in the hopes it is also useful to others. However, 
 it is not written to any particular coding standard, you might already know 
 everything here, or you might not even have the needed web programming context. As the 
 GPL says, "This program is distributed in the hope that it will be useful, but ... without 
