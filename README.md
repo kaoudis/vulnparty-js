@@ -26,7 +26,9 @@ are useful foundation to know deeply what a type of vulnerability actually is:
 it would or would *not* differ from output from source code that is not vulnerable!)
 
 ### Assumptions
-You will probably be able to get something out of this vulnerable toy app if you have:
+You will probably get the most out of exploring this app if you have *at least*:
+- a basic understanding of protocols like HTTP and FTP
+- a hobbyist or beginner's knowledge of IPv4 addressing
 - familiarity with web apps and the client-server model in a distributed environment where 
 the server makes requests to other servers (if you read the [examples](https://github.com/kaoudis/vulnparty-js#example-client-usage-for-a-few-of-the-endpoints) below and they do not 
 make sense, I would recommend you learn about these topics, and then come back!)
