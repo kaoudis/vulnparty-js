@@ -1,8 +1,14 @@
 # vulnparty
 This Node app is a toy project I have occasionally added onto 
 to explore what certain web app vulnerabilities might look like in source code, 
-especially SSRF, LFI, and RFI. 
-[GPLv3.0 link](https://github.com/kaoudis/vulnparty-js/blob/main/LICENSE) (c) 2022  @kaoudis
+especially
+[SSRF](https://owasp.org/www-community/attacks/Server_Side_Request_Forgery),
+[LFI](https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/11.1-Testing_for_Local_File_Inclusion),
+and
+[RFI](https://cwatch.comodo.com/blog/cyber-attack/remote-file-inclusion-rfi/).
+[GPLv3.0
+link](https://github.com/kaoudis/vulnparty-js/blob/main/LICENSE)
+(c) 2022  @kaoudis
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
