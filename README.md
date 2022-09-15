@@ -156,6 +156,17 @@ would not request 127.0.0.1
 This happens because you have requested a location (127.0.0.1) that the `/public` endpoint 
 considered a [private IP address](https://www.omnisecu.com/tcpip/what-are-private-ip-addresses.php). 
 
+Generally speaking, an IP address that is considered part of a "private" range is not accessible 
+from the broader internet, since LANs and other not publicly accessible networks reuse private 
+ranges. Public IP addresses on the other hand should be reachable, searchable, and generally assigned 
+to someone who is in charge of administering whatever stuff is hosted there. 
+
+IPv4-related RFCs that might be interesting if you're not sure what a public or private IPv4 range is: 
+- https://www.rfc-editor.org/rfc/rfc1918
+- https://www.rfc-editor.org/rfc/rfc1597
+
+As a side note, IPv6 also has "private" addresses which aren't routed on the broader internet.
+
 #### Getting started attacking the `/public` endpoint
 Let's say we are interested in tricking this endpoint into making a request to a private 
 IP address, even though it is only intended to proxy requests to public IP addresses. How might 
@@ -198,19 +209,19 @@ Appended serverside output should look something like the following:
   timestamp: '2022-09-15T00:55:52.171Z' }
 ```
 
-Curl client output:
+Oh no! An error!?
+
+The ECONNREFUSED in the server log doesn't mean the vulnparty server is broken, 
+rather that it did exactly what you told it to - make an HTTP GET request to 
+127.0.0.1 and then proxy back the response to you. The error is that nothing is 
+running on the default port for Axios on your local machine. Since this request was 
+to an IP in one of the "private" ranges, the `/private` endpoint tried to make it on 
+your behalf and has now told you that it couldn't connect to anything running there.
+
+Curl client output (followed by curl closing the connection to vulnparty):
 ```
 attempting to request (private=true) 'nextRequest' location 127.0.0.1
 ```
-
-Oh no! An error!?
-
-The ECONNREFUSED doesn't mean the vulnparty server is broken, rather that it did exactly
- what you told it to - make an HTTP GET request to 127.0.0.1 and then proxy back the 
-response to you. The error is that nothing is running on the default port for Axios 
-on your local machine. Since this request was to an IP in one of the "private" ranges, 
-the `/private` endpoint went ahead and tried to make it on your behalf and has now told 
-you that it couldn't connect to anything running there.
 
 #### Getting started attacking the `/private` endpoint
 Let's say we are interested in tricking the `/private` endpoint into making a request 
