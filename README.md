@@ -158,8 +158,9 @@ considered a [private IP address](https://www.omnisecu.com/tcpip/what-are-privat
 
 Generally speaking, an IP address that is considered part of a "private" range is not accessible 
 from the broader internet, since LANs and other not publicly accessible networks reuse private 
-ranges. Public IP addresses on the other hand should be reachable, searchable, and generally assigned 
-to someone who is in charge of administering whatever stuff is hosted there. 
+ranges. Addresses inside the private range used on the LAN should generally only be accessible from 
+another location inside the LAN in question. Public IP addresses on the other hand should be 
+publicly reachable and searchable through various tools. 
 
 IPv4-related RFCs that might be interesting if you're not sure what a public or private IPv4 range is: 
 - https://www.rfc-editor.org/rfc/rfc1918
