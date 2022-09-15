@@ -1,80 +1,83 @@
-# ssrfable-server
+# vulnparty
+This Node app is a toy project I have occasionally added onto 
+to explore what certain web app vulnerabilities might look like in source code, 
+especially SSRF, LFI, and RFI. 
+[GPLv3.0 link](https://www.gnu.org/licenses/gpl-3.0.html) (c) 2022  @kaoudis
 
-Hopefully it goes without saying but please don't deploy this server anywhere public facing; it is 
-a toy intended for test and learning purposes only. The normal 
-[GPLv3+](https://www.gnu.org/licenses/gpl-3.0.en.html) warnings apply here.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Overview
 In my very much continuing journey to learn to write secure code, I've found the following 
-are necessary foundation:
+are useful foundation to know deeply what a type of vulnerability actually is:
 - understanding what it means to write *vulnerable* code
-- understanding what a vulnerability of a specific type in source code actually might 
-look like in the wild
+- knowing what the specific type of vuln might look like in source code in the wild
 - understanding what output might look like when vulnerable source code is run (and when 
-it would or would not differ from source code that is not vulnerable!)
+it would or would *not* differ from output from source code that is not vulnerable!)
 
 ### Assumptions
-You will probably get the most out of this vulnerable app if you aren't a web app security expert, but **do have**:
+You will probably get the most out of this vulnerable app if you aren't yet fully fluent 
+in web app security, **but** do have:
 - familiarity with web apps and the client-server model in a distributed environment where 
-the server makes requests to other servers (if you read the [examples]() below and they do not 
+the server makes requests to other servers (if you read the [examples](https://github.com/kaoudis/vulnparty-js#example-client-usage-for-a-few-of-the-endpoints) below and they do not 
 make sense, I would recommend you learn about these topics, and then come back!)
 - a little familiarity with writing Javascript or at least willingness to read it, especially Node
 - high-level/basic understanding of web app attacks, especially SSRF, LFI, RFI
 - willingness to explore and play around!
 
-### What's this even good for?
-This app is designed as a grey box or even white box set of small exercises where each endpoint 
-has a series of things wrong with it. If you are truly stuck, please feel free to file an issue 
-here or DM on Twitter. As in "real" apps, there's no definite set of right answers, and no answer 
-key (but if you'd like to create an answer key that would be welcome too). 
-
-If you don't want to or cannot yet read JS, I would redirect you to one of the many great 
-apps and platforms intended to teach black box web app hacking instead. If you're a programmer 
-and interested in leveraging your skills in web app security, either through coding 
-securely or learning to spot vulnerabilities in source code, read on :)
-
-#### Recommended route
-0. Pick an endpoint from server.js
-1. Trace the code path through and try understand how the endpoint would be intended to work if 
-it wasn't written intentionally vulnerably
-1.5 Try to spot and categorize what might be wrong!
-2. Check out the [vuln documentation](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md) entry
-3. Finally, if you would like to see the behaviour of the endpoint live, run the server and test 
-the endpoint with your tooling of choice (anything that can send an http request will do). 
-
-What vulnerabilities do you spot? Do you see similarities to what is documented? Do you see 
-anything that is undocumented and obviously wrong, broken, or bad practice?
-
+### What's this good for then?
 #### You can:
 - practice your code auditing and documentation skills
 - practice your grey-box web app hacking
 - practice your vulnerable coding; PRs that add vulnerable features and describe why the code is 
 vulnerable and how you exploited it are welcome!
-- practice your JS coding standards; I'd like this app to follow [The google JS style guid](https://google.github.io/styleguide/jsguide.html) eventually
-- even just spin the app up and use it as a test ground for payloads, once you understand what the endpoints do
+- practice your JS coding standards; I'd like this app to follow some consistent styleguide eventually
+- use the app as a test ground for payloads, once you understand what the endpoints do
+
+#### More
+This app is a rough draft of a grey box or even white box set of small exercises where each endpoint 
+has a series of things wrong with it. If you are truly stuck, please feel free to file an issue 
+here or DM [on Twitter](https://twitter.com/kaoudis). As in "real" apps, there's no definite set of 
+right answers, and currently no real spoilers (if you'd like to create an answer key writeup, that 
+would also be welcome).
+
+I wrote this app over time in bits and pieces to teach myself more deeply about how web app vulns 
+I could find black-box work. I'm publishing it in the hopes it is also useful to others. However, 
+it is not written to any particular coding standard, you might already know 
+everything here, or you might not even have the needed web programming context. As the 
+GPL says, "This program is distributed in the hope that it will be useful, but ... without 
+even the implied warranty of FITNESS FOR A PARTICULAR PURPOSE."
+
+If you don't want to or cannot yet read JS, I would redirect you to either a Node tutorial or 
+one of the many great apps and platforms intended to teach black box web app hacking instead. 
+If you're a programmer and interested in learning secure coding or learning to spot 
+vulnerabilities in source code, let's goooo :)
+
+### Recommended route
+0. Pick an endpoint from server.js
+1. Trace the code path through and try understand how the endpoint would be intended to work if 
+it wasn't written intentionally vulnerably
+2. Try to spot and categorize what might be wrong!
+3. Check out the [vuln documentation](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md) entry
+4. Finally, if you would like to see the behaviour of the endpoint live, run the server and test 
+the endpoint with your tooling of choice (anything that can send an http request will do).
+5. Go back and look at the source code again. Does what you saw live make sense with your initial 
+understanding?
+
+What vulnerabilities do you spot? Do you see similarities to what is documented? Do you see 
+anything that is undocumented and obviously wrong, broken, or bad practice?
 
 See [vuln documentation here](https://github.com/kaoudis/vulnparty-js/blob/main/doc/vulns.md)
-
-### Why did you build this?
-Even though apps like DVWA and Juice Shop are awesome, someone else already implemented them. 
-
-To deeply learn how an attack works, my strategy so far has been to find a CVE or 
-vulnerable app or package, reverse engineer the attack, and try to implement something 
-broken in the same way. 
-
-I also wanted to write some NodeJS.
-
-This project started when I wanted to really understand why SSRF can happen beyond 
-"yeah I can test for that and find it" in late 2020 - early 2021.
-
-This test server was initially built to demonstrate some specific SSRF scenarios... 
-and then it mutated and grew! Please play around and enjoy yourself!
-
-## Why is Axios trying to connect to 127.0.0.1:80?
-If Axios cannot find the address/IP/whatever you're trying to forge a request to, it'll
-default to 127.0.0.1:80. So if you're trying to hit a port on your local machine but that 
-port isn't open, you might see ECONNREFUSED to 80 instead of whatever the port you were 
-trying to hit was.
 
 # How to run
 
@@ -172,6 +175,12 @@ This occurs because .
 Debug logs will be appended to `server_log.json` in the server working directory. `info` 
 level logs will be output when the server runs.
 
+### Why is Axios trying to connect to 127.0.0.1:80?
+If Axios cannot find the address/IP/whatever you're trying to forge a request to, it'll
+default to 127.0.0.1:80. So if you're trying to hit a port on your local machine but that 
+port isn't open, you might see ECONNREFUSED to 80 instead of whatever the port you were 
+trying to hit was.
+
 ## How to Contribute
 Have an idea or want to see something else here? Make a pull request or open an issue 
 please :)
@@ -190,6 +199,7 @@ vulnerable, with references, in https://github.com/kaoudis/vulnparty-js/blob/mai
 expected behaviour and verify it)
 - add [Swagger](https://swagger.io/) documentation for the endpoints
 - add new types of vulns or vulnerable dependencies that can be exploited
+- clean up the coding style to follow [the google JS style guide](https://google.github.io/styleguide/jsguide.html)
 
 ### Warning
 PRs to 'fix' any app vulns or upgrade from vulnerable dependency versions will be rejected
