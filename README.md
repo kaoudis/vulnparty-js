@@ -43,7 +43,10 @@ make sense, I would recommend you learn about these topics, and then come back!)
 - practice your vulnerable coding; PRs that add vulnerable features and describe why the code is 
 vulnerable and how you exploited it are welcome!
 - practice your JS coding standards; I'd like this app to follow some consistent styleguide eventually
-- use the app as a test ground for payloads, once you understand what the endpoints do
+- use the app as a test ground for payloads, once you
+  understand what the
+  [endpoints](https://jackmckew.dev/api-routes-in-nodejs.html)
+  do
 
 #### More
 This app is a rough draft of a grey box or even white box set of small exercises where each endpoint 
